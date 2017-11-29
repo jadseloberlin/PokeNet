@@ -21,7 +21,7 @@ public class BattleSim {
 	
 	
 	
-	public BattleSim(ArrayList<Mon> t1, String a1, ArrayList<Mon> t2, String a2) {
+	public BattleSim(ArrayList<Mon> t1, String a1, ArrayList<Mon> t2, String a2) { //FIX THIS
 		team1 = new Team(t1);
 		activeP1 = team1.lead();
 		team2 = new Team(t2);
@@ -60,6 +60,10 @@ public class BattleSim {
 		
 	}
 	
+	private void switchMon(int i) {
+		// REMEMBER TO ASSIGN THE NEW POKEMON AS ACTIVE
+		
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -88,7 +92,7 @@ public class BattleSim {
 					
 				}
 				else {
-					sim.activeP1 = sim.switchMon(1);
+					sim.switchMon(1);
 					Move move2 = sim.validMoves.get(p2Move);
 					move2.attack(sim.activeP2, sim.activeP1);
 				}
@@ -99,6 +103,7 @@ public class BattleSim {
 				move1.attack(sim.activeP1, sim.activeP2);
 			}
 			else {
+				//priority should get handled here
 				Move move1 = sim.validMoves.get(p1Move);
 				Move move2 = sim.validMoves.get(p2Move);
 				if(sim.activeP1.getSpeed() >= sim.activeP2.getSpeed()) {
@@ -113,5 +118,7 @@ public class BattleSim {
 		
 		
 	}
+
+	
 
 }
