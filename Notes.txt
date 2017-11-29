@@ -1,0 +1,27 @@
+NOTES
+
+State considerations before move:
+User's active pokemon health
+Opponent's active pokemon health
+User's total health
+Opponent's total health
+User's total healthy pokemon
+Opponent's total healthy pokemon
+Strongest multiplier against opponenent (double)
+Strongest multiplier against user (double)
+Will we move first? (boolean)
+Label (damage, status, switch) (only for training)
+
+
+GENERAL STRATEGY FOR OUR AI:
+
+1) randomly generate weights for nn
+2) store moves for both sides (in a way that's readable by nn)
+3) export winner's moves as dataset
+4) train nn on winner's moves 
+5) delete move dataset
+6) store nn weights to be imported
+7) for future iterations, import previous weights into nn and repeat 2-6
+
+
+Max EV: 63, Max IV: 15
