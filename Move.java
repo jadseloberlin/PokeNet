@@ -1,5 +1,5 @@
 
-public class Move {
+public abstract class Move {
 	
 	String name;
 	
@@ -9,16 +9,13 @@ public class Move {
 	boolean special;
 	String type; //String type;
 	
-	int numHits = 1; //number of times a move hits
+	int numHits; //number of times a move hits
 	
-	public boolean attack(Mon attack, Mon defend) {//return true if defend faints		
-		if(special) {
-			
-		}
-		else {
-			
-		}
-		
+	//returns true if defend faints
+	public abstract boolean attack(Mon attack, Mon defend) ;
+	
+	public int priority() {
+		return priority;
 	}
 
 }

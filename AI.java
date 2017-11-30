@@ -1,12 +1,12 @@
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 public interface AI {
 	
 	
 	
-	public String chooseMove(Set<Mon> team, Mon active, Set<Mon> oppTeam, Mon activeOpp, HashMap<String, Move >validMoves) ;
+	public String chooseMove(ArrayList<Mon> team, Mon active, ArrayList<Mon> oppTeam, Mon activeOpp, HashMap<String, Move> validMoves, HashMap<String, HashMap<String, Double>> typeMatchups) ;
 	
-	public Mon chooseSwitch(Set<Mon> team, Mon activeOpp);
+	public Mon chooseSwitch(ArrayList<Mon> team, Mon active, ArrayList<Mon> oppTeam, Mon activeOpp, HashMap<String, Move> validMoves, HashMap<String, HashMap<String, Double>> typeMatchups);
 
 }

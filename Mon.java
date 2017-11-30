@@ -2,10 +2,12 @@ import java.util.HashMap;
 
 public class Mon {
 	
+	String name;
+	
 	int level;
 	String[] moves = new String[4]; //String[]?
 	String type1;
-	String type2="";
+	String type2; //"NT" if no type available
 	
 	//for all stat arrays, index 0 is base, index 1 is EV, index 2 is IV
 	//we simulate with perfect IVs and EVs of 15 and 63
@@ -24,7 +26,7 @@ public class Mon {
 	double hp;
 	
 	int status; //-1 = healthy, 1 = paralysis, 2 = poison, 3 = burn, 4 = sleep, 5 = poison
-	HashMap<Integer, Boolean> secondaryStatus = new HashMap<Integer, Boolean>(); //1 = confusion, 2 = partially trapped, 3= solarbeam1, 4=sky attack1, 5 = rage, 6 = rest 
+	HashMap<Integer, Boolean> secondaryStatus = new HashMap<Integer, Boolean>(); //1 = confusion, 2 = partially trapped, 3= solarbeam1, 4=sky attack1, 5 = rage, 6 = rest, 7 = thrash1, 8 = thrash2
 	HashMap<Integer, Integer> statChanges; //keys: 1 for attack, 2 for defense, 3 for special, 4 for speed
 	
 	public void processStats(int stat) { //same as stat changes, except 0 is all stats
@@ -125,6 +127,10 @@ public class Mon {
 	
 	public double getSpeed() {
 		return speed;
+	}
+	
+	public String[] moves() {
+		return this.moves;
 	}
 	
 }
