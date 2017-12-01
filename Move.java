@@ -8,8 +8,8 @@ public abstract class Move {
 	int priority; //0 at default
 	boolean special;
 	String type; //String type;
-	
-	int numHits; //number of times a move hits
+	int PP; //number of times a move can be used before healing
+	int numHits; //maximum number of times a move hits
 	
 	//returns true if defend faints
 	public abstract boolean attack(Mon attack, Mon defend) ;
