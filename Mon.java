@@ -4,7 +4,23 @@ public class Mon {
 	
 	String name;
 	
-	int level;
+	int maxhp;
+	int hp;
+	
+	int attack;
+	int defense;
+	int speed;
+	
+	String quickMoveName;
+	int quickMovePower;
+	int quickMoveAcc;
+	String strongMoveName;
+	int strongMovePower;
+	int strongMoveAcc;
+	
+	
+	
+	/*int level;
 	String[] moves = new String[4]; //String[]?
 	String type1;
 	String type2; //"NT" if no type available
@@ -25,7 +41,7 @@ public class Mon {
 	
 	double hp;
 	
-	int status; //-1 = healthy, 1 = paralysis, 2 = poison, 3 = burn, 4 = sleep, 5 = poison
+	int status; //-1 = healthy, 1 = paralysis, 2 = poison, 3 = burn, 4 = sleep, 5 = frozen
 	HashMap<Integer, Boolean> secondaryStatus = new HashMap<Integer, Boolean>(); //1 = confusion, 2 = partially trapped, 3= solarbeam1, 4=sky attack1, 5 = rage, 6 = rest, 7 = thrash1, 8 = thrash2
 	HashMap<Integer, Integer> statChanges; //keys: 1 for attack, 2 for defense, 3 for special, 4 for speed
 	
@@ -132,5 +148,5 @@ public class Mon {
 	public String[] moves() {
 		return this.moves;
 	}
-	
+	*/
 }

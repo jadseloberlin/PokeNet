@@ -26,6 +26,6 @@ GENERAL STRATEGY FOR OUR AI:
 
 Max EV: 63, Max IV: 15
 
-problem moves: whirlwind, recover, solarbeam, dream eater, thrash, night shade, counter, rage, focus energy, sky attack, rest, dragon rage
+problem moves: whirlwind, recover, solarbeam, rage, clamp, dream eater, thrash, night shade, counter, rage, focus energy, sky attack, rest, dragon rage
 
 thrash1 T -> thrash2 T thrash1 F -> thrash1 F thrash2 F confusion T OR thrash1 T thrash2 T -> thrash1 F thrash2 F confusion T

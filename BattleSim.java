@@ -4,7 +4,7 @@ import java.util.Set;
 
 public class BattleSim {
 	
-	ArrayList<Mon> team1; 
+	Array team1; 
 	ArrayList<Mon> team2; //pass these to represent state to nn
 	
 	HashMap<String, HashMap<String, Double>> atkMult = new HashMap<String, HashMap<String, Double>>(); //input attacking type to get a hashmap whose key is the defending type, to get the multiplier

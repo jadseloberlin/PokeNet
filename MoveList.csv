@@ -1,0 +1,19 @@
+name,power,type,stat,target,stageChange,accuracy,pp,status,secStatus,effectPercent,numHits,priority
+growl,0,normal,attack,opponent,-1,100,40,-1,-1,1,1,0
+aurora beam,65,ice,attack,opponent,-1,100,20,-1,-1,.333,1,0
+supersonic,0,normal,0,opponent,0,55,20,-1,1,1,1,0
+#clamp,35,water,0,opponent,0,75,15,-1,2,1,1,0
+spike cannon,20,normal,0,opponent,0,100,15,-1,-1,0,5,0
+water gun,40,water,0,opponent,0,100,25,-1,-1,0,1,0
+withdraw,0,water,defense,self,1,100,40,-1,-1,1,1,0
+amnesia,0,psychic,special,self,2,100,20,-1,-1,1,1,0
+doubleslap,15,normal,0,opponent,0,85,10,-1,-1,0,5,0
+ice punch,75,ice,0,opponent,0,100,15,5,0,.1,1,0
+body slam,85,normal,0,opponent,0,100,15,1,-1,.333,1,0
+confuse ray,0,ghost,0,opponent,0,100,10,-1,1,1,1,0
+hydro pump,120,water,0,opponent,0,80,5,-1,-1,0,1,0
+blizzard,120,ice,0,opponent,0,90,5,5,-1,.1,1,0
+rock throw,50,rock,0,opponent,0,65,15,-1,-1,0,1,0
+slam,80,normal,0,opponent,0,75,20,-1,-1,0,1,0
+harden,0,normal,defense,self,1,100,30,-1,-1,1,1,0
+fire punch,
