@@ -1,4 +1,4 @@
-import java.util.HashMap;
+//import java.util.HashMap;
 
 public class Mon {
 	
@@ -14,10 +14,42 @@ public class Mon {
 	String quickMoveName;
 	int quickMovePower;
 	int quickMoveAcc;
+	String quickMoveType;
 	String strongMoveName;
 	int strongMovePower;
 	int strongMoveAcc;
+	String strongMoveType;
 	
+	String type1;
+	String type2;
+	
+	boolean active;
+	boolean defeated = false;
+	
+	public Mon(String species, int health, int atk, int def, int spe, String qMN, int qmp, int qma, String qmt, String sMN, int smp, int sma, String smt, String typeOne, String typeTwo) {
+		name = species;
+		maxhp = health;
+		attack = atk;
+		defense = def;
+		speed = spe;
+		quickMoveName = qMN;
+		quickMovePower = qmp;
+		quickMoveAcc = qma;
+		quickMoveType = qmt;
+		strongMoveName = sMN;
+		strongMovePower = smp;
+		strongMoveAcc = sma;
+		strongMoveType = smt;
+		type1 = typeOne;
+		type2 = typeTwo;
+		
+		hp = maxhp;
+	}
+	
+	public Mon copy() {
+		Mon rtn = new Mon(name, maxhp, attack, defense, speed, quickMoveName, quickMovePower, quickMoveAcc, quickMoveType, strongMoveName, strongMovePower, strongMoveAcc, strongMoveType, type1, type2);
+		return rtn;
+	}
 	
 	
 	/*int level;

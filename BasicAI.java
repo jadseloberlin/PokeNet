@@ -1,10 +1,11 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class BasicAI implements AI {
 
 
-	public String chooseMove(ArrayList<Mon> team, Mon active, ArrayList<Mon> oppTeam, Mon activeOpp,
+	/*public String chooseMove(ArrayList<Mon> team, Mon active, ArrayList<Mon> oppTeam, Mon activeOpp,
 			HashMap<String, Move> validMoves, HashMap<String, HashMap<String, Double>> typeMatchups) {
 		
 		//find the move with the highest type multiplier
@@ -59,6 +60,23 @@ public class BasicAI implements AI {
 			break;
 		}
 		return rtn;
+	}*/
+
+
+	
+	public String chooseMove(Mon[] team, Mon activeOpp, HashMap<String, HashMap<String, Double>> typeMatchups) {
+		//randomly choose an action
+		int randNum = new Random().nextInt(100);
+		if(randNum%27==0) {
+			return "switch1";
+		}
+		if(randNum%29==0) {
+			return "switch2";
+		}
+		if(randNum%2==1) {
+			return "strong";
+		}
+		return "quick";
 	}
 
 }

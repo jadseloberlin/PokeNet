@@ -1,22 +1,515 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
+import java.util.Scanner;
 import java.util.Set;
 
 public class BattleSim {
 	
-	Array team1; 
-	ArrayList<Mon> team2; //pass these to represent state to nn
+	String[] types = {"fire", "water", "grass", "bug", "ghost","psychic","dragon","electric", "rock", "ice", "poison", "normal", "ground","fighting", "flying","none"};
+	HashMap<String, Mon> validMon = new HashMap<String, Mon>();
+	
+	Mon[] team1 = new Mon[3]; 
+	Mon[] team2 = new Mon[3]; 
 	
 	HashMap<String, HashMap<String, Double>> atkMult = new HashMap<String, HashMap<String, Double>>(); //input attacking type to get a hashmap whose key is the defending type, to get the multiplier
+	//anything attacking type none is x1
 	
 	AI p1; //player input, simple original, nn
 	AI p2;
 	
-	Mon activeP1;
-	Mon activeP2;
+	//Mon activeP1;
+	//Mon activeP2;
+	
+	//labels: quick attack, strong attack, switch to 1st available, switch to 2nd available
+	
+	public HashMap<String,Double> createBasicMap(){
+		HashMap<String, Double> rtn = new HashMap<String, Double>();
+		for(String type : this.types) {
+			rtn.put(type, 1.0);
+		}
+		return rtn;
+	}
+	//varXY represents player X's Y'th pokemon
+	public BattleSim(String p1AI, String p2AI, String p1Mon1, String p1Mon2, String p1Mon3, String p2Mon1, String p2Mon2, String p2Mon3) {
+		//populate type matchups
+		HashMap<String, Double> fireAttack = createBasicMap();
+		
+		fireAttack.put("fire", .5);
+		fireAttack.put("water", .5);
+		fireAttack.put("grass", 2.0);
+		fireAttack.put("bug", 2.0);
+		fireAttack.put("ice", 2.0);
+		fireAttack.put("rock", .5);
+		fireAttack.put("steel", 2.0);
+		fireAttack.put("dragon", .5);
+		this.atkMult.put("fire", fireAttack);
+		
+		HashMap<String, Double> waterAttack = createBasicMap();
+		waterAttack.put("dragon", .5);
+		waterAttack.put("grass", .5);
+		waterAttack.put("fire", 2.0);
+		waterAttack.put("rock",2.0);
+		waterAttack.put("ground", 2.0);
+		waterAttack.put("water", .5);
+		this.atkMult.put("water", waterAttack);
+		
+		HashMap<String, Double> grassAttack = createBasicMap();
+		grassAttack.put("water", 2.0);
+		grassAttack.put("rock", 2.0);
+		grassAttack.put("ground", 2.0);
+		grassAttack.put("grass", .5);
+		grassAttack.put("fire", .5);
+		grassAttack.put("bug", .5);
+		grassAttack.put("poison", .5);
+		grassAttack.put("dragon", .5);
+		grassAttack.put("flying", .5);
+		grassAttack.put("steel", .5);
+		this.atkMult.put("grass", grassAttack);
+		
+		HashMap<String, Double> electricAttack = createBasicMap();
+		electricAttack.put("water", 2.0);
+		electricAttack.put("ground", 0.0);
+		electricAttack.put("flying", 2.0);
+		electricAttack.put("dragon", .5);
+		electricAttack.put("electric", .5);
+		electricAttack.put("grass", .5);
+		this.atkMult.put("electric", electricAttack);
+		
+		//load AI
+		if(p1AI.equals("user")) {
+			p1 = new UserControl();
+		}
+		else if(p1AI.equals("nn")) {
+		//	p1 = new PokeNet();
+		}
+		else if(p1AI.equals("basic")) {
+			p1 = new BasicAI();
+		}
+		else {
+			System.out.println("invalid ai for player 1");
+			System.exit(1);
+		}
+		
+		if(p2AI.equals("user")) {
+			p2 = new BasicAI();
+		}
+		else if(p2AI.equals("nn")) {
+		//	p2 = new PokeNet();
+		}
+		else if(p2AI.equals("basic")) {
+			p2 = new BasicAI();
+		}
+		else {
+			System.out.println("invalid ai for player 2");
+			System.exit(1);
+		}
+		
+		//load validMon
+		Scanner s = null;
+		try {
+			s = new Scanner(new File("pokemon.csv"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("cannot find list of valid pokemon");
+			System.exit(1);
+		}
+		s.nextLine();
+		while(s.hasNextLine()) {
+			String[] lineparts = s.nextLine().split(","); 
+			String name = lineparts[0];
+			validMon.put(name, new Mon(name, Integer.parseInt(lineparts[1]), Integer.parseInt(lineparts[2]),Integer.parseInt(lineparts[3]),
+					Integer.parseInt(lineparts[4]), lineparts[5], Integer.parseInt(lineparts[6]), Integer.parseInt(lineparts[7]),
+					lineparts[8], lineparts[9],Integer.parseInt(lineparts[10]),Integer.parseInt(lineparts[11]),lineparts[12],
+					lineparts[13], lineparts[14]));
+		}
+		//load teams
+		Mon m11 = validMon.get(p1Mon1).copy();
+		m11.active=true;
+		Mon m12 = validMon.get(p1Mon2).copy();
+		Mon m13 = validMon.get(p1Mon3).copy();
+		Mon m21 = validMon.get(p2Mon1).copy();
+		m21.active=true;
+		Mon m22 = validMon.get(p2Mon2).copy();
+		Mon m23 = validMon.get(p2Mon3).copy();
+		team1[0]=m11;
+		team1[1]=m12;
+		team1[2]=m13;
+		team2[0]=m21;
+		team2[1]=m22;
+		team2[2]=m23;
+	}
+	public boolean isDefeated(Mon[] team) {//returns whether or not team has no usable Pokemon left
+		
+		return team[0].defeated&&team[1].defeated&team[2].defeated;
+	}
+	
+	public Mon active(Mon[] team) {
+		if(team[0].active) {
+			return team[0];
+		}
+		else if(team[1].active) {
+			return team[1];
+		}
+		else {
+			return team[2];
+		}
+	}
+	
+	public void switch1(Mon[] team) {
+		if(team[0].active) {
+			if(!team[1].defeated) {
+				team[0].active=false;
+				team[1].active=true;
+				return;
+			}
+			else if(!team[2].defeated) {
+				team[0].active=false;
+				team[2].active=true;
+				return;
+			}
+			else {
+				return;
+			}
+		}
+		
+		else if(team[1].active) {
+			if(!team[2].defeated) {
+				team[1].active=false;
+				team[2].active=true;
+				return;
+			}
+			else if(!team[0].defeated) {
+				team[1].active=false;
+				team[0].active=true;
+				return;
+			}
+			else {
+				return;
+			}
+		}
+		else if(team[2].active) {
+			if(!team[0].defeated) {
+				team[2].active=false;
+				team[0].active=true;
+				return;
+			}
+			else if(!team[1].defeated) {
+				team[2].active=false;
+				team[1].active=true;
+				return;
+			}
+			else {
+				return;
+			}
+		}
+		else {
+			return;
+		}
+	}
+	
+	public void switch2(Mon[] team) {
+		if(team[0].active) {
+			if(!team[2].defeated) {
+				team[0].active=false;
+				team[2].active=true;
+				return;
+			}
+			else if(!team[1].defeated) {
+				team[0].active=false;
+				team[1].active=true;
+				return;
+			}
+			else {
+				return;
+			}
+		}
+		else if(team[1].active) {
+			if(!team[0].defeated) {
+				team[1].active=false;
+				team[2].active=true;
+				return;
+			}
+			else if(!team[2].defeated) {
+				team[1].active=false;
+				team[2].active=true;
+			}
+			else {
+				return;
+			}
+		}
+		else if(team[2].active){
+			if(!team[1].defeated) {
+				team[2].active=false;
+				team[1].active=true;
+				return;
+			}
+			else if(!team[0].defeated) {
+				team[2].active=false;
+				team[0].active=true;
+				return;
+			}
+			else {
+				return;
+			}
+		}
+		else {
+			return;
+		}
+	}
+	
+	public boolean quick(Mon attacker, Mon target, Mon[] targetTeam) { //returns true if target faints
+		
+		int accCheck = new Random().nextInt(100); //accuracy needs to be higher than accCheck to land
+		if(attacker.quickMoveAcc <= accCheck) {
+			return false;
+		}
+		double damage = attacker.attack+attacker.quickMovePower-target.defense;
+		double multiplier = 1;
+		multiplier = multiplier * this.atkMult.get(attacker.quickMoveType).get(target.type1);
+		multiplier = multiplier * this.atkMult.get(attacker.quickMoveType).get(target.type2);
+		damage = damage * multiplier;
+		target.hp = target.hp - (int) damage;
+		
+		if(target.hp < 1) {
+			target.defeated=true;
+			if(!isDefeated(targetTeam)) {
+				switch1(targetTeam);
+			}
+			return true;
+		}
+		return false;
+		
+	}
+	
+	public boolean strong(Mon attacker, Mon target, Mon[] targetTeam) { //returns true if target faints
+		
+		int accCheck = new Random().nextInt(100); //accuracy needs to be higher than accCheck to land
+		if(attacker.strongMoveAcc <= accCheck) {
+			return false;
+		}
+		int damage = attacker.attack+attacker.strongMovePower-target.defense;
+		target.hp = target.hp - damage;
+		if(target.hp < 1) {
+			target.defeated=true;
+			if(!isDefeated(targetTeam)) {
+				switch1(targetTeam);
+			}
+			return true;
+		}
+		return false;
+		
+	}
+	
+	public boolean battle() {
+		return this.battle(team1, team2);
+	}
+	
+	//returns true if p1 wins, false if p2 wins
+	public boolean battle(Mon[] teamNum1, Mon[] teamNum2) {
+		
+		while(!isDefeated(teamNum1)&&!isDefeated(teamNum2)) {
+			
+		
+			Mon active1 = active(teamNum1);
+			Mon active2 = active(teamNum2);
+			String move1 = p1.chooseMove(teamNum1, active2, atkMult);
+			String move2 = p2.chooseMove(teamNum2, active1, atkMult);
+			if(move1.equals("switch1")){
+				//if player 1 is switching to first available 
+				if(move2.equals("switch1")) {
+					//if player 2 is also switching to first
+					if(active1.speed>=active2.speed) {
+						//if p1 is faster
+						switch1(teamNum1);
+						switch1(teamNum2);
+					}
+					else {
+						//if p2 is faster
+						switch1(teamNum2);
+						switch1(teamNum1);
+						
+					}
+				}
+				else if(move2.equals("switch2")) {
+					//if p2 is switching to second available
+					if(active1.speed>=active2.speed) {
+						//if p1 is faster
+						switch1(teamNum1);
+						switch2(teamNum2);
+					}
+					else {
+						//if p2 is faster
+						switch2(teamNum2);
+						switch1(teamNum1);
+						
+					}
+				}
+				else if(move2.equals("quick")) {
+					//p2 is attacking quickly
+					switch1(teamNum1);
+					quick(active2, active(teamNum1), teamNum1);
+				}
+				else {
+					//p2 is attacking strongly
+					switch1(teamNum1);
+					strong(active2, active(teamNum1), teamNum1);
+				}
+			}
+			else if(move1.equals("switch2")) {
+				//p1 switches to second available
+				if(move2.equals("switch2")) {
+					//if player 2 is also switching to second
+					if(active1.speed>=active2.speed) {
+						//if p1 is faster
+						switch2(teamNum1);
+						switch2(teamNum2);
+					}
+					else {
+						//if p2 is faster
+						switch2(teamNum2);
+						switch2(teamNum1);
+						
+					}
+				}
+				else if(move2.equals("switch1")) {
+					//if p2 is switching to first available
+					if(active1.speed>=active2.speed) {
+						//if p1 is faster
+						switch2(teamNum1);
+						switch1(teamNum2);
+					}
+					else {
+						//if p2 is faster
+						switch1(teamNum2);
+						switch2(teamNum1);
+						
+					}
+				}
+				else if(move2.equals("quick")) {
+					//p2 is attacking quickly
+					switch2(teamNum1);
+					quick(active2, active(teamNum1), teamNum1);
+				}
+				else {
+					//p2 is attacking strongly
+					switch2(teamNum1);
+					strong(active2, active(teamNum1), teamNum1);
+				}
+			}
+			
+			else if(move1.equals("quick")) {
+				//p1 chooses quick
+				if(move2.equals("switch1")) {
+					//p2 switches to first available
+					switch1(teamNum2);
+					quick(active1, active(teamNum2), teamNum2);
+				}
+				else if(move2.equals("switch2")) {
+					//p2 switches to second available
+					switch2(teamNum2);
+					quick(active1, active(teamNum2), teamNum2);
+				}
+				else {
+					//p2 attacks
+					if(active1.speed>=active2.speed) {
+						//p1 is faster
+						quick(active1, active2,teamNum2);
+						if(isDefeated(teamNum2)) continue;
+						if(move2.equals("quick")) {
+							//p2 uses a quick attack
+							quick(active(teamNum2), active1, teamNum1);
+						}
+						else {
+							//p2 uses a strong attack
+							strong(active(teamNum2), active1, teamNum1);
+						}
+					}
+					else {
+						//p2 is faster
+						if(move2.equals("quick")) {
+							//p2 uses a quick attack
+							quick(active2, active1, teamNum1);
+						}
+						else {
+							//p2 uses a strong attack
+							strong(active2, active1, teamNum1);
+						}
+						if(isDefeated(teamNum1)) continue;
+						quick(active(teamNum1), active2, teamNum2);
+					}
+				}
+					
+			}
+			else {
+				//p1 chooses strong
+				if(move2.equals("switch1")) {
+					//p2 switches to first available
+					switch1(teamNum2);
+					strong(active1, active(teamNum2), teamNum2);
+				}
+				else if(move2.equals("switch2")) {
+					//p2 switches to second available
+					switch2(teamNum2);
+					strong(active1, active(teamNum2), teamNum2);
+				}
+				else {
+					//p2 attacks
+					if(active1.speed>=active2.speed) {
+						//p1 is faster
+						strong(active1, active2, teamNum2);
+						if(isDefeated(teamNum2)) continue;
+						if(move2.equals("quick")) {
+							//p2 uses a quick attack
+							quick(active2, active1, teamNum1);
+						}
+						else {
+							//p2 uses a strong attack
+							strong(active2, active1, teamNum1);
+						}
+					}
+					else {
+						//p2 is faster
+						if(move2.equals("quick")) {
+							//p2 uses a quick attack
+							quick(active2, active1, teamNum1);
+						}
+						else {
+							//p2 uses a strong attack
+							strong(active2, active1, teamNum1);
+						}
+						if(isDefeated(teamNum1)) continue;
+						strong(active1, active2, teamNum2);
+					}
+				}
+				
+			}
+			
+					
+			
+			
+			
+			
+			
+		}
+		
+		
+		return isDefeated(teamNum2);
+		
+	}
 	
 	
-	HashMap<String, Move> validMoves = new HashMap<String, Move>(); //all valid moves in file
+	public static void main(String[] args) {
+		
+		BattleSim sim = new BattleSim("basic", "basic", "charizard", "blastoise", "venusaur", "gyarados", "gengar", "arcanine");
+		System.out.println(sim.battle());
+		
+	}
+	
+	
+	/*HashMap<String, Move> validMoves = new HashMap<String, Move>(); //all valid moves in file
 	
 	
 	
@@ -223,7 +716,7 @@ public class BattleSim {
 		boolean winner = sim.winner();
 		
 		
-	}
+	}*/
 
 	
 
