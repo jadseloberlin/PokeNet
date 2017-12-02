@@ -22,10 +22,8 @@ def main():
     continuous = {}
     attributeValuesDict = {}
     attributeValuesDictList = {}
-    labelList = []
-    labelSet = set()
-
-    binaryLabel = False
+    labelList = [] hardcode!
+    labelSet = set()  hardcode!
 
     #open file and process data
     path = '*.csv' #note C:
@@ -59,10 +57,7 @@ def main():
 
     del attributeList[0]
 
-    for label in labelSet:
-        labelList.append(label)
-    if len(labelList) == 2:
-        binaryLabel = True
+
 
     tempList = attributeValuesDict.items()
     for tup in tempList:
@@ -74,7 +69,7 @@ def main():
         attributeValuesDictList[attribute] = tempList2
 
     for instance in completeList:
-        processInstance(instance, attributeValuesDictList, labelList, binaryLabel, continuous, attributeList)
+        processInstance(instance, attributeValuesDictList, labelList, continuous, attributeList)
 
     #shuffle list
     random.seed(seed)
@@ -83,8 +78,6 @@ def main():
 
 
     labelNum = len(labelList)
-    if binaryLabel:
-        labelNum = 1
 
     listAtt = []
     listLab = []
@@ -101,31 +94,29 @@ def main():
     trainTensorFlow(tupleComplete, 10)
 
 def buildTensorFlow(numAttributes, numLabels, numNeurons, learningRate, iterNum, labelList, seed):
-    x = tf.placeholder(tf.float32, shape = [None, numAttributes])
+    state = tf.placeholder(tf.float32, shape = [numLabels])
+    r = tf.placeholder(tf.float32, shape = [numLabels])
+    predict = tf.placeholder(tf.float32, shape = [numLabels])
+    oldPredict  = tf.placeholder(tf.float32, shape = [numLabels])
+    mask = tf.placeholder(tf.float32, shape = [1])
 
     #create hidden layer
     W_hidden = tf.Variable(tf.truncated_normal([numAttributes, numNeurons], stddev = 0.1))
     b_hidden = tf.Variable(tf.constant(0.1, shape = [numNeurons]))
-    net_hidden = tf.matmul(x, W_hidden) + b_hidden
+    net_hidden = tf.matmul(state, W_hidden) + b_hidden
     out_hidden = tf.sigmoid(net_hidden)
 
     #create output layer
     W_output = tf.Variable(tf.truncated_normal([numNeurons, numLabels], stddev = 0.1))
     b_output = tf.Variable(tf.constant(0.1, shape = [numLabels]))
     net_output = tf.matmul(out_hidden, W_output) + b_output
-    if numLabels == 1:
-        predict = tf.sigmoid(net_output)
-    else:
-        predict = tf.nn.softmax(net_output)
+    predict = net_output
+    action = tf.argmax(net_input,1)
 
     #create the true labels
     y = tf.placeholder(tf.float32, shape = [None, numLabels])
 
-    #create training
-    if numLabels == 1:
-        cost = tf.reduce_sum(0.5 * (y-predict) * (y - predict))
-    else:
-        cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=net_output))
+    cost = r * mask + tf.max(predict) * mask - oldPredict
 
     trainer = tf.train.AdamOptimizer(learningRate).minimize(cost)
 
@@ -141,119 +132,73 @@ def loadTensorFlow(sess):
     load_path = ckpt.model_checkpoint_path
     saver.restore(sess, load_path)
 
-
-def trainTensorFlow(complete, maxSteps):
+def trainTensorFlow(complete, maxSteps, numActions):
     saver = tf.train.Saver()
-
     sess = tf.Session()
     loadTensorFlow(sess)
-
-    #train
-
     graph = tf.get_default_graph()
-    x = graph.get_tensor_by_name("x:0")
+
+    state = graph.get_tensor_by_name("state:0")
     y = graph.get_tensor_by_name("y:0")
-    net_output = graph.get_tensor_by_name("net_output:0")
-
-    #create training
-    if numLabels == 1:
-        cost = tf.reduce_sum(0.5 * (y-predict) * (y - predict))
-    else:
-        cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=net_output))
-
-    trainer = tf.train.AdamOptimizer(learningRate).minimize(cost)
+    predict = graph.get_tensor_by_name("predict:0")
+    oldPredict = graph.get_tensor_by_name("oldPredict:0")
+    action = graph.get_tensor_by_name("action:0")
+    trainer´ = graph.get_tensor_by_name("trainer:0")
+    r = graph.get_tensor_by_name("r:0")
+    mask = graph.get_tensor_by_name("mask:0")
 
     steps = 0
     maxSteps = iterNum
     while steps < maxSteps:
         steps +=1
-    #    confusionMatrix = [[0 for x in range(len(labelList))] for y in range(len(labelList))]
-        p = sess.run(trainier, feed_dict = {x: complete[0], y:complete[1]})
 
-        accuracyNum = 0.0
-        accuracyDenom = 0.0
+        p = sess.run(action, feed_dict = {state: et.st])
+        qsa = [0] * numActions
+        qsa[et.at] = p[et.at]
 
-        for i in range(len(p)):
-            instance = p[i]
-            trueLabel = train[1][i]
-            trueIndex= -1
-            guessIndex = -1
-            if len(instance) == 1:
-                trueIndex= trueLabel[0]
-                guessVal = instance[0]
-                if guessVal >= .5:
-                  guessIndex = 1
-                else:
-                  guessIndex = 0
-            else:
-                trueIndex = trueLabel.index(max(trueLabel))
-                guessVal = instance[0]
-                guessIndex = 0
-                for i in range(1,len(instance)):
-                    val = instance[i]
-                    if val > guessVal:
-                      guessVal = val
-                      guessIndex = i
-            if(trueIndex==guessIndex):
-                accuracyNum+=1
-            accuracyDenom+=1
+        m = [0] *numActions
+        m[et.at] = 1
+
+        sess.run(trainer, feed_dict{state: et.st+1, r: et.rt, mask: m, oldPredict: qsa})
         if steps % 10 == 0:
-            print(accuracyNum/accuracyDenom)
             saver.save(sess, 'pokemon_model', global_step=steps)
 
-    #Create a saver object which will save all the variables
-
-    #Now, save the graph
-
-
 def testTensorFlow(complete):
-
+    saver = tf.train.Saver()
     sess = tf.Session()
     loadTensorFlow(sess)
     graph = tf.get_default_graph()
-    x = graph.get_tensor_by_name("x:0")
+
+    state = graph.get_tensor_by_name("state:0")
+    y = graph.get_tensor_by_name("y:0")
     predict = graph.get_tensor_by_name("predict:0")
+    oldPredict = graph.get_tensor_by_name("oldPredict:0")
+    action = graph.get_tensor_by_name("action:0")
+    trainer´ = graph.get_tensor_by_name("trainer:0")
+    r = graph.get_tensor_by_name("r:0")
+    mask = graph.get_tensor_by_name("mask:0")
 
     #test
-    # confusionMatrix = [[0 for x in range(len(labelList))] for y in range(len(labelList))]
-    p = sess.run(predict, feed_dict = {x: complete[0]})
-
-    accuracyNum1 = 0.0
-    accuracyDenom1 = 0.0
-
-    for i in range(len(p)):
-        instance = p[i]
-        trueLabel = test[1][i]
-        trueIndex= -1
-        guessIndex = -1
-        if len(instance) == 1:
-          trueIndex= trueLabel[0]
-          guessVal = instance[0]
-          if guessVal >= .5:
-            guessIndex = 1
-          else:
-            guessIndex = 0
-        else:
-          trueIndex = trueLabel.index(max(trueLabel))
-          guessVal = instance[0]
-          guessIndex = 0
-          for i in range(1,len(instance)):
-            val = instance[i]
-            if val > guessVal:
-              guessVal = val
-              guessIndex = i
-        if(trueIndex==guessIndex):
-            accuracyNum1+=1
-        accuracyDenom1+=1
-
-    accuracy = accuracyNum1/accuracyDenom1
-    print("test accuracy " + str(accuracy))
+    p = sess.run(predict, feed_dict = {state: complete[0]})
 
 
-
-def processInstance(instance, attributeValuesDictList, labelList, binaryLabel, continuous, attList):
-    instance.labelListProcess(labelList, binaryLabel)
+def processInstance(instance, attributeValuesDictList, labelList, continuous, attList):
+    instance.labelListProcess(labelList)
     instance.attributeListProcess(attributeValuesDictList, continuous, attList)
+
+def update():
+    p = sess.run(predict, feed_dict{x: et.st})
+    qsa= [0] * len(p) #create matrix
+    qsa[et.at] = p[et.at] #Q(st, at)
+
+    qsa2 = [0] * len(p) #create matrix
+    mask[et.at] = 1
+
+    p = sess.run(predict, feed_dict{x: et.st+1})
+    maxP = max(p)
+
+
+
 
 if __name__ == '__main__':
     main()
