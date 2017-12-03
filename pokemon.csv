@@ -1,7 +1,7 @@
 name,hp,attack,defense,speed,quick move name,q move dmg,q move acc,q move type,strong move name,s move dmg,s move acc,s move type,type1,type2
 pikachu,70,55,35,90,quick attack,25,100,normal,thunder,90,65,electric,electric,none
 ninetails,110,70,45,70,ember,30,95,fire,heat wave,110,55,fire,fire,none
-banette,100,85,80,55,shadow sneak,25,100,ghost,shadow claw,80,75,ghost,ghost
+banette,100,85,80,55,shadow sneak,25,100,ghost,shadow claw,80,75,ghost,ghost, none
 onix,100,100,80,25,rock throw,35,90,rock,earthquake,120,50,ground,rock,ground
 piplup,75,60,50,60,peck,30,100,flying,bubblebeam,85,75,water,water,none
 dragonair,90,110,90,30,slam,30,85,normal,hyperbeam,100,45,normal,dragon,none

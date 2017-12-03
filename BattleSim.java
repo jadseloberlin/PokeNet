@@ -32,6 +32,15 @@ public class BattleSim {
 		}
 		return rtn;
 	}
+	public String contents(String[] par) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		for(String str : par) {
+			sb.append(str+", ");
+		}
+		sb.append("]");
+		return sb.toString();
+	}
 	//varXY represents player X's Y'th pokemon
 	public BattleSim(String p1AI, String p2AI, String p1Mon1, String p1Mon2, String p1Mon3, String p2Mon1, String p2Mon2, String p2Mon3) {
 		//populate type matchups
@@ -244,7 +253,7 @@ public class BattleSim {
 		//load validMon
 		Scanner s = null;
 		try {
-			s = new Scanner(new File("pokemon.csv"));
+			s = new Scanner(new File("C:\\Users\\jadse\\eclipse-workspace\\PokeNet\\bin\\pokemon.csv"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.out.println("cannot find list of valid pokemon");
@@ -254,6 +263,7 @@ public class BattleSim {
 		while(s.hasNextLine()) {
 			String[] lineparts = s.nextLine().split(","); 
 			String name = lineparts[0];
+			System.out.println(contents(lineparts));
 			validMon.put(name, new Mon(name, Integer.parseInt(lineparts[1]), Integer.parseInt(lineparts[2]),Integer.parseInt(lineparts[3]),
 					Integer.parseInt(lineparts[4]), lineparts[5], Integer.parseInt(lineparts[6]), Integer.parseInt(lineparts[7]),
 					lineparts[8], lineparts[9],Integer.parseInt(lineparts[10]),Integer.parseInt(lineparts[11]),lineparts[12],
