@@ -7,33 +7,33 @@ from basicAI import BasicAI
 from mon import Mon
 
 class BattleSim:
-    types = ["fire", "water", "grass", "bug", "ghost","psychic","dragon","electric", "rock", "ice", "poison", "normal", "ground","fighting", "flying","dark","steel","fairy","none"]
-    validMon = {}
-    team1 = []
-    team2 = []
-    atkMult = {}
-    p1 = None
-    p2 = None
+    self.types = ["fire", "water", "grass", "bug", "ghost","psychic","dragon","electric", "rock", "ice", "poison", "normal", "ground","fighting", "flying","dark","steel","fairy","none"]
+    self.validMon = {}
+    self.team1 = []
+    self.team2 = []
+    self.atkMult = {}
+    self.p1 = None
+    self.p2 = None
 
-    def createBasicMap():
+    def createBasicMap(self):
         rtn = {}
-        for t in types:
+        for t in self.types:
             rtn[t] = 1.0
         return rtn
 
-    def contents(par):
+    def contents(self,par):
         sb = "["
         for s in par:
             sb += (s + ", ")
         sb += "]"
         return sb
 
-    def BattleSim(p1AI, p2AI, p1Mon1, p1Mon2,  p1Mon3,  p2Mon1, p2Mon2,  p2Mon3):
+    def BattleSim(self,p1AI, p2AI, p1Mon1, p1Mon2,  p1Mon3,  p2Mon1, p2Mon2,  p2Mon3):
         # populate type matchups
 		fireAttack = createBasicMap()
 		fireAttack["fire"] = .5
 		fireAttack["water"] = .5;
-		fireAttack.put["grass"] = 2.0
+		fireAttack["grass"] = 2.0
 		fireAttack["bug"] = 2.0
 		fireAttack["ice"] = 2.0
 		fireAttack["rock"] = .5
@@ -205,34 +205,26 @@ class BattleSim:
 		atkMult["dark"] = darkAttack
 
 
-		//load AI
-		if(p1AI=="user") {
-			p1 = UserControl
-		}
-		else if(p1AI=="nn") {
-		# 	p1 = PokeNet
-		}
-		else if(p1AI.equals("basic")) {
-			p1 = BasicAI
-		}
-		else {
+		#load AI
+		if(p1AI=="user") :
+			self.p1 = UserControl
+		#elif(p1AI=="nn"):
+		# 	self.p1 = PokeNet
+		elif(p1AI == "basic"):
+			self.p1 = BasicAI
+		else:
 			print("invalid ai for player 1")
-			System.exit(1);
-		}
+			sys.exit(1)
 
-		if(p2AI=="user") {
-			p2 = BasicAI
-		}
-		else if(p2AI=="nn") {
-			# p2 = PokeNet
-		}
-		else if(p2AI=="basic") {
-			p2 = BasicAI
-		}
-		else {
+		if(p2AI=="user"):
+			self.p2 = BasicAI
+		#elif(p2AI == "nn"):
+			# self.p2 = PokeNet
+		elif(p2AI == "basic"):
+			self.p2 = BasicAI
+		else:
 			print("invalid ai for player 2")
-			System.exit(1);
-		}
+			sys.exit(1)
 
         fileLocation = "pokemon.csv"
         dataFile = open(fileLocation, 'r')
@@ -240,26 +232,26 @@ class BattleSim:
         for line in dataFile:
             lineparts = line.split(",")
             name  = lineparts[0]
-            validMon[name] = Mon(name, int(lineparts[1]), int(lineparts[2]), int(lineparts[3]),
+            self.validMon[name] = Mon(name, int(lineparts[1]), int(lineparts[2]), int(lineparts[3]),
 					int(lineparts[4]), lineparts[5], int(lineparts[6]), int(lineparts[7]),
 					lineparts[8], lineparts[9], int(lineparts[10]), int(lineparts[11]), lineparts[12],
 					lineparts[13], lineparts[14]))
 
         # load teams
-		m11 = deepcopy(validMon[p1Mon1])
+		m11 = deepcopy(self.validMon[p1Mon1])
 		m11.active = True
-		m12 = deepcopy(validMon[p1Mon2])
-		m13 = deepcopy(validMon[p1Mon3])
-		m21 = deepcopy(validMon[p2Mon1])
+		m12 = deepcopy(self.validMon[p1Mon2])
+		m13 = deepcopy(self.validMon[p1Mon3])
+		m21 = deepcopy(self.validMon[p2Mon1])
 		m21.active = True;
-		m22 = deepcopy(validMon[p2Mon2])
-		m23 = deepcopy(validMon[p2Mon3])
-		team1[0] = m11;
-		team1[1] = m12;
-		team1[2] = m13;
-		team2[0] = m21;
-		team2[1] = m22;
-		team2[2] = m23;
+		m22 = deepcopy(self.validMon[p2Mon2])
+		m23 = deepcopy(self.validMon[p2Mon3])
+		self.team1[0] = m11;
+		self.team1[1] = m12;
+		self.team1[2] = m13;
+		self.team2[0] = m21;
+		self.team2[1] = m22;
+		self.team2[2] = m23;
 
     def isDefeated(team):
         # returns whether or not team has no usable Pokemon left
@@ -382,3 +374,182 @@ class BattleSim:
 				return
 		else :
 			return
+
+
+	#returns true if p1 wins, false if p2 wins
+    def battle() {
+	  turns = 0
+      while not (isDefeated(team1)) and not (isDefeated(team2)):
+          println()
+          println("This is turn number "+(++turns))
+          active1 = active(teamNum1)
+          active2 = active(teamNum2)
+          move1 = p1.chooseMove(teamNum1, active2, atkMult)
+          move2 = p2.chooseMove(teamNum2, active1, atkMult)
+          if (move1 == "switch1"):
+				#if player 1 is switching to first available
+                if (move2 == "switch1"):
+					#if player 2 is also switching to first
+                    if (active1.speed >= active2.speed):
+						#if p1 is faster
+                        switch1(teamNum1)
+						switch1(teamNum2)
+					else
+						#if p2 is faster
+						switch1(teamNum2)
+						switch1(teamNum1)
+				elif(move2 == "switch2"):
+					#if p2 is switching to second available
+					if (active1.speed >= active2.speed):
+						#if p1 is faster
+						switch1(teamNum1)
+						switch2(teamNum2)
+					else:
+						#if p2 is faster
+						switch2(teamNum2)
+						switch1(teamNum1)
+				elif(move2=="quick"):
+					#p2 is attacking quickly
+                    switch1(teamNum1)
+					quick(active2, active(teamNum1), teamNum1)
+				else:
+					#p2 is attacking strongly
+					switch1(teamNum1)
+					strong(active2, active(teamNum1), teamNum1)
+			elif (move1 == "switch2"):
+				#p1 switches to second available
+				if (move2 == "switch2"):
+					#if player 2 is also switching to second
+					if (active1.speed >= active2.speed):
+						#if p1 is faster
+						switch2(teamNum1)
+						switch2(teamNum2)
+					else :
+						#if p2 is faster
+						switch2(teamNum2)
+						switch2(teamNum1)
+				elif (move2 == "switch1"):
+					#if p2 is switching to first available
+					if (active1.speed >= active2.speed):
+						#if p1 is faster
+						switch2(teamNum1)
+						switch1(teamNum2)
+					else:
+						#if p2 is faster
+						switch1(teamNum2)
+						switch2(teamNum1)
+				elif (move2 == "quick"):
+					#p2 is attacking quickly
+					switch2(teamNum1)
+					quick(active2, active(teamNum1), teamNum1)
+				else :
+					#p2 is attacking strongly
+					switch2(teamNum1)
+					strong(active2, active(teamNum1), teamNum1)
+			elif(move1 == "quick"):
+				#p1 chooses quick
+				if (move2 == "switch1"): #GO FROM HERE
+					//p2 switches to first available
+					switch1(teamNum2);
+					quick(active1, active(teamNum2), teamNum2);
+				}
+				else if(move2.equals("switch2")) {
+					//p2 switches to second available
+					switch2(teamNum2);
+					quick(active1, active(teamNum2), teamNum2);
+				}
+				else {
+					//p2 attacks
+					if(active1.speed>=active2.speed) {
+						//p1 is faster
+						quick(active1, active2,teamNum2);
+						if(isDefeated(teamNum2)||active2.defeated) continue;
+						if(move2.equals("quick")) {
+							//p2 uses a quick attack
+							quick(active(teamNum2), active1, teamNum1);
+						}
+						else {
+							//p2 uses a strong attack
+							strong(active(teamNum2), active1, teamNum1);
+						}
+					}
+					else {
+						//p2 is faster
+						if(move2.equals("quick")) {
+							//p2 uses a quick attack
+							quick(active2, active1, teamNum1);
+						}
+						else {
+							//p2 uses a strong attack
+							strong(active2, active1, teamNum1);
+						}
+						if(isDefeated(teamNum1)) {
+						//	System.out.println(active1+" fainted!");
+							continue;
+						}
+						if(active1.defeated) continue;
+						quick(active1, active2, teamNum2);
+					}
+				}
+
+			}
+			else {
+				//p1 chooses strong
+				if(move2.equals("switch1")) {
+					//p2 switches to first available
+					switch1(teamNum2);
+					strong(active1, active(teamNum2), teamNum2);
+				}
+				else if(move2.equals("switch2")) {
+					//p2 switches to second available
+					switch2(teamNum2);
+					strong(active1, active(teamNum2), teamNum2);
+				}
+				else {
+					//p2 attacks
+					if(active1.speed>=active2.speed) {
+						//p1 is faster
+						strong(active1, active2, teamNum2);
+						if(isDefeated(teamNum2)||active2.defeated) continue;
+						if(move2.equals("quick")) {
+							//p2 uses a quick attack
+							quick(active(teamNum2), active1, teamNum1);
+						}
+						else {
+							//p2 uses a strong attack
+							strong(active(teamNum2), active1, teamNum1);
+						}
+					}
+					else {
+						//p2 is faster
+						if(move2.equals("quick")) {
+							//p2 uses a quick attack
+							quick(active2, active1, teamNum1);
+						}
+						else {
+							//p2 uses a strong attack
+							strong(active2, active1, teamNum1);
+						}
+						if(isDefeated(teamNum1)) {
+							continue;
+						}
+						if(active1.active) {
+							//if active1 wasn't knocked out
+							strong(active1, active2, teamNum2);
+						}
+					}
+				}
+
+			}
+
+
+
+
+
+
+		}
+
+
+		return isDefeated(teamNum2);
+
+	}
