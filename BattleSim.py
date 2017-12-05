@@ -1,3 +1,4 @@
+from copy import deepcopy
 import os
 import math
 import nn
@@ -239,7 +240,23 @@ class BattleSim:
         for line in dataFile:
             lineparts = line.split(",")
             name  = lineparts[0]
-            validMon.put(name, Mon(name, int(lineparts[1]), int(lineparts[2]), int(lineparts[3]),
+            validMon[name] = Mon(name, int(lineparts[1]), int(lineparts[2]), int(lineparts[3]),
 					int(lineparts[4]), lineparts[5], int(lineparts[6]), int(lineparts[7]),
 					lineparts[8], lineparts[9], int(lineparts[10]), int(lineparts[11]), lineparts[12],
 					lineparts[13], lineparts[14]))
+
+        # load teams
+		m11 = deepcopy(validMon[p1Mon1])
+		m11.active = True
+		m12 = deepcopy(validMon[p1Mon2])
+		m13 = deepcopy(validMon[p1Mon3])
+		m21 = deepcopy(validMon[p2Mon1])
+		m21.active = True;
+		m22 = deepcopy(validMon[p2Mon2])
+		m23 = deepcopy(validMon[p2Mon3])
+		team1[0] = m11;
+		team1[1] = m12;
+		team1[2] = m13;
+		team2[0] = m21;
+		team2[1] = m22;
+		team2[2] = m23;
