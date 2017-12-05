@@ -1,22 +1,30 @@
 name,hp,attack,defense,speed,quick move name,q move dmg,q move acc,q move type,strong move name,s move dmg,s move acc,s move type,type1,type2
-pikachu,70,55,35,90,quick attack,25,100,normal,thunder,90,65,electric,electric,none
-ninetails,110,70,45,70,ember,30,95,fire,heat wave,110,55,fire,fire,none
-banette,100,85,80,55,shadow sneak,25,100,ghost,shadow claw,80,75,ghost,ghost, none
-onix,100,100,80,25,rock throw,35,90,rock,earthquake,120,50,ground,rock,ground
-piplup,75,60,50,60,peck,30,100,flying,bubblebeam,85,75,water,water,none
-dragonair,90,110,90,30,slam,30,85,normal,hyperbeam,100,45,normal,dragon,none
-porygon,80,75,90,60,tackle,25,100,normal,tri attack,90,90,normal,normal,none
-zapdos,100,75,80,75,peck,25,100,flying,zap cannon,100,75,electric,electric,flying
-charizard,90,90,90,30,wing attack,30,95,flying,inferno,80,95,fire,fire,flying
-blastoise,100,85,95,30,rapid spin,25,100,normal,hydro pump,90,90,water,water,none
-venusaur,85,95,95,50,vine whip,30,95,grass,solar beam,100,75,grass,grass,poison
-snorlax,100,75,100,20,lick,30,100,ghost,giga impact,100,90,normal,normal,none
-diglett,75,70,85,45,scratch,25,100,normal,earthquake,100,90,ground,ground,none
-gengar,70,90,85,70,shadow punch,30,100,ghost,shadow ball,100,95,ghost,ghost,poison
-gyarados,100,95,95,50,twister,25,100,dragon,hurricane,110,75,flying,water,flying
-togepi,100,60,75,60,fairy wind,40,100,fairy,ancient power,100,100,rock,fairy,none
-arcanine,75,80,80,75,bite,25,100,dark,fire fang,90,90,fire,fire,none
-lapras,100,75,100,75,water gun,30,95,water,ice beam,70,95,ice,water,ice
-lucario,75,85,85,80,quick attack,25,100,normal,close combat,75,100,fighting,fighting,steel
-darkrai,75,90,80,45,ominous wind,30,100,ghost,dark pulse,85,80,dark,dark,none
-scyther,75,75,75,65,fury cutter,40,90,bug,x-scissor,75,100,bug,bug,flying
+Pikachu,210,70,35,90,quick attack,25,100,normal,thunder,90,65,electric,electric,none
+Ninetails,310,70,45,70,ember,30,95,fire,heat wave,110,55,fire,fire,none
+Banette,300,85,80,55,shadow sneak,25,100,ghost,shadow claw,80,75,ghost,ghost,none
+Onix,300,100,90,20,rock throw,35,90,rock,earthquake,120,45,ground,rock,ground
+Piplup,200,60,75,85,peck,30,100,flying,bubblebeam,85,75,water,water,none
+Dragonair,290,110,90,30,slam,30,85,normal,hyperbeam,100,45,normal,dragon,none
+Porygon,280,75,90,60,tackle,25,100,normal,tri attack,90,75,normal,normal,none
+Zapdos,320,90,65,75,peck,25,100,flying,zap cannon,100,70,electric,electric,flying
+Charizard,290,90,90,30,wing attack,30,95,flying,inferno,80,80,fire,fire,flying
+Blastoise,300,85,95,30,rapid spin,25,100,normal,hydro pump,90,75,water,water,none
+Venusaur,285,95,95,50,vine whip,30,95,grass,solar beam,100,65,grass,grass,poison
+Snorlax,350,75,100,20,lick,10,100,ghost,giga impact,100,85,normal,normal,none
+Diglett,230,70,85,45,scratch,25,100,normal,earthquake,120,45,ground,ground,none
+Gengar,270,90,60,95,shadow punch,30,95,ghost,shadow ball,110,55,ghost,ghost,poison
+Gyarados,270,95,95,50,twister,25,100,dragon,hurricane,110,55,flying,water,flying
+Togepi,280,60,75,60,fairy wind,45,100,fairy,ancient power,70,70,rock,fairy,none
+Arcanine,275,90,70,75,bite,25,100,dark,fire fang,90,80,fire,fire,none
+Lapras,300,75,100,75,water gun,30,95,water,ice beam,70,85,ice,water,ice
+Lucario,275,85,85,80,quick attack,25,100,normal,close combat,75,80,fighting,fighting,steel
+Darkrai,275,90,80,45,ominous wind,30,70,ghost,dark pulse,85,80,dark,dark,none
+Scyther,275,75,75,65,fury cutter,40,90,bug,x-scissor,75,70,bug,bug,flying
+Meowth,200,80,25,70,scratch,20,100,normal,pay day,150,10,normal,normal,none
+Arbok,250,85,65,65,bite,25,100,dark,poison fang,90,80,poison,poison,none
+Weezing,295,65,85,65,smog,20,100,poison,sludge bomb,85,80,poison,poison,none
+Gardevoir,280,80,55,75,confusion,30,90,psychic,dazzling gleam,100,65,fairy,psychic,fairy
+Mimikyu,300,90,60,30,shadow sneak,25,100,ghost,play rough,95,70,fairy,ghost,fairy
+Heracross,280,95,50,60,arm thrust,20,90,fighting,megahorn,110,65,bug,bug,fighting
+Beedrill,265,90,30,90,poison sting,20,100,poison,x-scissor,75,70,bug,bug,poison
+Alakazam,275,85,45,80,confusion,20,90,psychic,psychic,90,85,psychic,psychic,none

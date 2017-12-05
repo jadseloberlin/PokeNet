@@ -12,7 +12,7 @@ def main():
     # trainingSetPercent = float(sys.argv[5])
     numNeurons = 50
     learningRate = .07
-    iterNum = 10;
+    iterNum = 750;
     # trainingSetPercent = float(sys.argv[5])
     seed = 1334
     completeList = []
@@ -94,11 +94,16 @@ def main():
     trainTensorFlow(tupleComplete, 10)
 
 def buildTensorFlow(numAttributes, numLabels, numNeurons, learningRate, iterNum, labelList, seed):
-    state = tf.placeholder(tf.float32, shape = [numLabels])
-    r = tf.placeholder(tf.float32, shape = [numLabels])
-    predict = tf.placeholder(tf.float32, shape = [numLabels])
-    oldPredict  = tf.placeholder(tf.float32, shape = [numLabels])
-    mask = tf.placeholder(tf.float32, shape = [1])
+    # state = tf.placeholder(tf.float32, shape = [numLabels])
+    # r = tf.placeholder(tf.float32, shape = [bumActions])
+    # predict = tf.placeholder(tf.float32, shape = [numLabels])
+    # oldPredict  = tf.placeholder(tf.float32, shape = [numLabels])
+    # mask = tf.placeholder(tf.float32, shape = [1])
+
+     state = tf.placeholder(tf.float32, shape = [numLabels])
+     nextQ = tf.placeholder(tf.float32, shape = [numActions])
+     r = tf.placeholder(tf.float32, shape = [numActions])
+     mask = tf.placeholder(tf.float32, shape = [1])
 
     #create hidden layer
     W_hidden = tf.Variable(tf.truncated_normal([numAttributes, numNeurons], stddev = 0.1))
@@ -116,7 +121,7 @@ def buildTensorFlow(numAttributes, numLabels, numNeurons, learningRate, iterNum,
     #create the true labels
     y = tf.placeholder(tf.float32, shape = [None, numLabels])
 
-    cost = r * mask + tf.max(predict) * mask - oldPredict
+    cost = (r * mask + tf.max(nextQ) * mask - mask*predict)**2
 
     trainer = tf.train.AdamOptimizer(learningRate).minimize(cost)
 
@@ -141,27 +146,32 @@ def trainTensorFlow(complete, maxSteps, numActions):
     state = graph.get_tensor_by_name("state:0")
     y = graph.get_tensor_by_name("y:0")
     predict = graph.get_tensor_by_name("predict:0")
-    oldPredict = graph.get_tensor_by_name("oldPredict:0")
+    nextQ = graph.get_tensor_by_name("nextQ:0")
     action = graph.get_tensor_by_name("action:0")
-    trainer´ = graph.get_tensor_by_name("trainer:0")
+    trainer = graph.get_tensor_by_name("trainer:0")
     r = graph.get_tensor_by_name("r:0")
     mask = graph.get_tensor_by_name("mask:0")
 
+
+    D = []
     steps = 0
     maxSteps = iterNum
     while steps < maxSteps:
         steps +=1
+        st = None
+        et = (s, at, rt, st1)
+        D.append(et)
 
-        p = sess.run(action, feed_dict = {state: et.st])
-        qsa = [0] * numActions
-        qsa[et.at] = p[et.at]
-
-        m = [0] *numActions
-        m[et.at] = 1
-
-        sess.run(trainer, feed_dict{state: et.st+1, r: et.rt, mask: m, oldPredict: qsa})
-        if steps % 10 == 0:
-            saver.save(sess, 'pokemon_model', global_step=steps)
+        while len(D) > 0:
+            #if running slow change while loop
+            et = D.pop()
+            nQ = sess.run(predict, feed_dict = {state:st1])
+            i = labelList.index(et.at)
+            m = [0] *numActions
+            m[i] = 1
+            sess.run(trainer, feed_dict{mask: m, reward:r, state:st, nextQ: nQ})
+            if steps % 10 == 0:
+                saver.save(sess, 'pokemon_model', global_step=steps)
 
 def testTensorFlow(complete):
     saver = tf.train.Saver()

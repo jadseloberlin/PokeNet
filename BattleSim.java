@@ -308,7 +308,7 @@ public class BattleSim {
 				team[0].active=false;
 				team[1].active=true;
 				if(team[0].defeated) {
-					System.out.println(team[0].name+ " fainted!");
+					//System.out.println(team[0].name+ " fainted!");
 					System.out.println("Go, "+team[1].name+"!");
 				}
 				else {
@@ -321,11 +321,11 @@ public class BattleSim {
 				team[0].active=false;
 				team[2].active=true;
 				if(team[0].defeated) {
-					System.out.println(team[0].name+ " fainted!");
+				//	System.out.println(team[0].name+ " fainted!");
 					System.out.println("Go, "+team[2].name+"!");
 				}
 				else {
-					System.out.println(team[0].name+"  is switching out!");
+				//	System.out.println(team[0].name+"  is switching out!");
 					System.out.println("Go, "+team[2].name+"!");
 				}
 				return;
@@ -340,7 +340,7 @@ public class BattleSim {
 				team[1].active=false;
 				team[2].active=true;
 				if(team[1].defeated) {
-					System.out.println(team[1].name+ " fainted!");
+					//System.out.println(team[1].name+ " fainted!");
 					System.out.println("Go, "+team[2].name+"!");
 				}
 				else {
@@ -353,7 +353,7 @@ public class BattleSim {
 				team[1].active=false;
 				team[0].active=true;
 				if(team[1].defeated) {
-					System.out.println(team[1].name+ " fainted!");
+				//	System.out.println(team[1].name+ " fainted!");
 					System.out.println("Go, "+team[0].name+"!");
 				}
 				else {
@@ -371,7 +371,7 @@ public class BattleSim {
 				team[2].active=false;
 				team[0].active=true;
 				if(team[2].defeated) {
-					System.out.println(team[2].name+ " fainted!");
+				//	System.out.println(team[2].name+ " fainted!");
 					System.out.println("Go, "+team[0].name+"!");
 				}
 				else {
@@ -384,7 +384,7 @@ public class BattleSim {
 				team[2].active=false;
 				team[1].active=true;
 				if(team[2].defeated) {
-					System.out.println(team[2].name+ " fainted!");
+				//	System.out.println(team[2].name+ " fainted!");
 					System.out.println("Go, "+team[1].name+"!");
 				}
 				else {
@@ -408,7 +408,7 @@ public class BattleSim {
 				team[0].active=false;
 				team[2].active=true;
 				if(team[0].defeated) {
-					System.out.println(team[0].name+ " fainted!");
+					//System.out.println(team[0].name+ " fainted!");
 					System.out.println("Go, "+team[2].name+"!");
 				}
 				else {
@@ -421,7 +421,7 @@ public class BattleSim {
 				team[0].active=false;
 				team[1].active=true;
 				if(team[0].defeated) {
-					System.out.println(team[0].name+ " fainted!");
+				//	System.out.println(team[0].name+ " fainted!");
 					System.out.println("Go, "+team[1].name+"!");
 				}
 				else {
@@ -439,7 +439,7 @@ public class BattleSim {
 				team[1].active=false;
 				team[0].active=true;
 				if(team[1].defeated) {
-					System.out.println(team[1].name+ " fainted!");
+				//	System.out.println(team[1].name+ " fainted!");
 					System.out.println("Go, "+team[0].name+"!");
 				}
 				else {
@@ -452,7 +452,7 @@ public class BattleSim {
 				team[1].active=false;
 				team[2].active=true;
 				if(team[1].defeated) {
-					System.out.println(team[1].name+ " fainted!");
+				//	System.out.println(team[1].name+ " fainted!");
 					System.out.println("Go, "+team[2].name+"!");
 				}
 				else {
@@ -469,7 +469,7 @@ public class BattleSim {
 				team[2].active=false;
 				team[1].active=true;
 				if(team[2].defeated) {
-					System.out.println(team[2].name+ " fainted!");
+			//		System.out.println(team[2].name+ " fainted!");
 					System.out.println("Go, "+team[1].name+"!");
 				}
 				else {
@@ -482,7 +482,7 @@ public class BattleSim {
 				team[2].active=false;
 				team[0].active=true;
 				if(team[2].defeated) {
-					System.out.println(team[2].name+ " fainted!");
+			//		System.out.println(team[2].name+ " fainted!");
 					System.out.println("Go, "+team[0].name+"!");
 				}
 				else {
@@ -502,7 +502,7 @@ public class BattleSim {
 	
 	public boolean quick(Mon attacker, Mon target, Mon[] targetTeam) { //returns true if target faints
 		
-		System.out.println(attacker.name+" is using "+attacker.quickMoveName+ " on "+target.name+"!");
+		System.out.println(attacker.name+" used "+attacker.quickMoveName+ " on "+target.name+"!");
 		int accCheck = new Random().nextInt(100); //accuracy needs to be higher than accCheck to land
 		if(attacker.quickMoveAcc <= accCheck) {
 			System.out.println("But it missed!");
@@ -528,6 +528,7 @@ public class BattleSim {
 		
 		if(target.hp < 1) {
 			target.defeated=true;
+			System.out.println(target.name + " fainted!");
 			if(!isDefeated(targetTeam)) {
 				switch1(targetTeam);
 			}
@@ -538,7 +539,7 @@ public class BattleSim {
 	}
 	
 	public boolean strong(Mon attacker, Mon target, Mon[] targetTeam) { //returns true if target faints
-		System.out.println(attacker.name+" is using "+attacker.strongMoveName+ " on "+target.name+"!");
+		System.out.println(attacker.name+" used "+attacker.strongMoveName+ " on "+target.name+"!");
 		int accCheck = new Random().nextInt(100); //accuracy needs to be higher than accCheck to land
 		if(attacker.strongMoveAcc <= accCheck) {
 			System.out.println("But it missed!");
@@ -562,6 +563,7 @@ public class BattleSim {
 		target.hp = target.hp - damage;
 		if(target.hp < 1) {
 			target.defeated=true;
+			System.out.println(target.name + " fainted!");
 			if(!isDefeated(targetTeam)) {
 				switch1(targetTeam);
 			}
@@ -683,7 +685,7 @@ public class BattleSim {
 					if(active1.speed>=active2.speed) {
 						//p1 is faster
 						quick(active1, active2,teamNum2);
-						if(isDefeated(teamNum2)) continue;
+						if(isDefeated(teamNum2)||active2.defeated) continue;
 						if(move2.equals("quick")) {
 							//p2 uses a quick attack
 							quick(active(teamNum2), active1, teamNum1);
@@ -704,10 +706,11 @@ public class BattleSim {
 							strong(active2, active1, teamNum1);
 						}
 						if(isDefeated(teamNum1)) {
-							System.out.println(active1+" fainted!");
+						//	System.out.println(active1+" fainted!");
 							continue;
 						}
-						quick(active(teamNum1), active2, teamNum2);
+						if(active1.defeated) continue;
+						quick(active1, active2, teamNum2);
 					}
 				}
 					
@@ -729,7 +732,7 @@ public class BattleSim {
 					if(active1.speed>=active2.speed) {
 						//p1 is faster
 						strong(active1, active2, teamNum2);
-						if(isDefeated(teamNum2)) continue;
+						if(isDefeated(teamNum2)||active2.defeated) continue;
 						if(move2.equals("quick")) {
 							//p2 uses a quick attack
 							quick(active(teamNum2), active1, teamNum1);
@@ -750,10 +753,12 @@ public class BattleSim {
 							strong(active2, active1, teamNum1);
 						}
 						if(isDefeated(teamNum1)) {
-							System.out.println(active1.name+ " fainted!");
 							continue;
 						}
-						strong(active(teamNum1), active2, teamNum2);
+						if(active1.active) {
+							//if active1 wasn't knocked out
+							strong(active1, active2, teamNum2);
+						}
 					}
 				}
 				
@@ -763,7 +768,7 @@ public class BattleSim {
 			
 			
 			
-			
+			System.out.println();
 			
 		}
 		
@@ -777,10 +782,10 @@ public class BattleSim {
 		
 		BattleSim sim = new BattleSim("basic", "basic", "charizard", "blastoise", "venusaur", "gyarados", "gengar", "arcanine");
 		if(sim.battle()){
-			System.out.println("P1 won!");
+			System.out.println("\nP1 won!");
 		}
 		else {
-			System.out.println("P2 won!");
+			System.out.println("\nP2 won!");
 		}
 		
 	}
