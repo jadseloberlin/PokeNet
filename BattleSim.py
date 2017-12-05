@@ -1,6 +1,9 @@
 import os
 import math
 import nn
+from userControl import UserControl
+from basicAI import BasicAI
+from mon import Mon
 
 class BattleSim:
     types = ["fire", "water", "grass", "bug", "ghost","psychic","dragon","electric", "rock", "ice", "poison", "normal", "ground","fighting", "flying","none"]
@@ -199,3 +202,44 @@ class BattleSim:
 		darkAttack["fairy"] = .5
 		darkAttack["fighting"] = .5
 		atkMult["dark"] = darkAttack
+
+
+		//load AI
+		if(p1AI=="user") {
+			p1 = UserControl
+		}
+		else if(p1AI=="nn") {
+		# 	p1 = PokeNet
+		}
+		else if(p1AI.equals("basic")) {
+			p1 = BasicAI
+		}
+		else {
+			print("invalid ai for player 1")
+			System.exit(1);
+		}
+
+		if(p2AI=="user") {
+			p2 = BasicAI
+		}
+		else if(p2AI=="nn") {
+			# p2 = PokeNet
+		}
+		else if(p2AI=="basic") {
+			p2 = BasicAI
+		}
+		else {
+			print("invalid ai for player 2")
+			System.exit(1);
+		}
+
+        fileLocation = "pokemon.csv"
+        dataFile = open(fileLocation, 'r')
+        line = next(dataFile)
+        for line in dataFile:
+            lineparts = line.split(",")
+            name  = lineparts[0]
+            validMon.put(name, Mon(name, int(lineparts[1]), int(lineparts[2]), int(lineparts[3]),
+					int(lineparts[4]), lineparts[5], int(lineparts[6]), int(lineparts[7]),
+					lineparts[8], lineparts[9], int(lineparts[10]), int(lineparts[11]), lineparts[12],
+					lineparts[13], lineparts[14]))
