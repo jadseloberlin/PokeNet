@@ -1,6 +1,7 @@
 import math
 import random
 import sys
+import ai as AI
 
 class BasicAI(object):
     def __init__(self):
