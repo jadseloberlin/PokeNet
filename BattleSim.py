@@ -5,6 +5,7 @@ import nn
 from userControl import UserControl
 from basicAI import BasicAI
 from mon import Mon
+import random
 
 class BattleSim(object):
     def createBasicMap(self):
@@ -264,7 +265,7 @@ class BattleSim(object):
         else:
             return team[2];
 
-    def switch1(self, team)  #what if nothing to switch to
+    def switch1(self, team):  #what if nothing to switch to
 	   if (team[0].active):
            if not (team[1].defeated) :
                team[0].active = False;
@@ -319,7 +320,7 @@ class BattleSim(object):
 		else :
 			return
 
-    def switch2(self, team)  #what if nothing to switch to
+    def switch2(self, team):  #what if nothing to switch to
 	   if (team[0].active):
            if not (team[2].defeated) :
                team[0].active = False;
@@ -376,7 +377,7 @@ class BattleSim(object):
 
 
 	#returns true if p1 wins, false if p2 wins
-    def battle(self) {
+    def battle(self): {
 	  turns = 0
       while not (self.isDefeated(self.team1)) and not (self.isDefeated(self.team2)):
           println()
@@ -518,3 +519,59 @@ class BattleSim(object):
 							#if active1 wasn't knocked out
 							self.strong(active1, active2, self.team2)
         return self.isDefeated(teamNum2)
+
+    def quick(self, attacker, target, targetTeam): #returns true if target faints
+
+		println(attacker.name+" used "+attacker.quickMoveName+ " on "+target.name+"!")
+		accCheck = random.randint(0,100) #accuracy needs to be higher than accCheck to land
+		if (attacker.quickMoveAcc <= accCheck):
+			println("But it missed!")
+			return False
+		damage = attacker.attack + attacker.quickMovePower - target.defense
+		multiplier = 1
+		multiplier = multiplier * self.atkMult.get(attacker.quickMoveType).get(target.type1)
+		multiplier = multiplier * self.atkMult.get(attacker.quickMoveType).get(target.type2)
+		if(multiplier > 1):
+			println("It's super effective!")
+		elif ( multiplier == 0 ):
+			println("It didn't have any effect...")
+			return False
+        elif(multiplier < 1 ):
+			println("It's  not very effective...")
+		damage = damage * multiplier
+		target.hp = target.hp - damage
+		if(target.hp < 1):
+			target.defeated = True
+			println(target.name + " fainted!")
+			if(not isDefeated(targetTeam)):
+				self.switch1(targetTeam)
+			return True
+		return False
+
+    def strong(self, attacker, target, targetTeam): #returns true if target faints
+
+        println(attacker.name+" used "+attacker.strongMoveName+ " on "+target.name+"!")
+        accCheck = random.randint(0,100) #accuracy needs to be higher than accCheck to land
+        if (attacker.strongMoveAcc <= accCheck):
+            println("But it missed!")
+            return False
+        damage = attacker.attack + attacker.strongMovePower - target.defense
+        multiplier = 1
+        multiplier = multiplier * self.atkMult.get(attacker.strongMoveType).get(target.type1)
+        multiplier = multiplier * self.atkMult.get(attacker.strongMoveType).get(target.type2)
+        if(multiplier > 1):
+            println("It's super effective!")
+        elif ( multiplier == 0 ):
+            println("It didn't have any effect...")
+            return False
+        elif(multiplier < 1 ):
+            println("It's  not very effective...")
+        damage = damage * multiplier
+        target.hp = target.hp - damage
+        if(target.hp < 1):
+            target.defeated = True
+            println(target.name + " fainted!")
+            if(not isDefeated(targetTeam)):
+                self.switch1(targetTeam)
+            return True
+        return False
