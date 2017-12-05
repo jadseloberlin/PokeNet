@@ -260,3 +260,15 @@ class BattleSim:
 		team2[0] = m21;
 		team2[1] = m22;
 		team2[2] = m23;
+
+    def isDefeated(team):
+        # returns whether or not team has no usable Pokemon left
+	   return team[0].defeated and team[1].defeated & team[2].defeated
+
+   	def active(team):
+        if team[0].active :
+			return team[0];
+        elif team[1].active:
+            return team[1];
+        else:
+            return team[2];
