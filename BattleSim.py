@@ -327,3 +327,58 @@ class BattleSim:
 				return
 		else :
 			return
+
+    def switch2(team)  #what if nothing to switch to
+	   if (team[0].active):
+           if not (team[2].defeated) :
+               team[0].active = False;
+               team[2].active = True;
+               if not (team[0].defeated):
+                   println(team[0].name+"  is switching out!")
+               println("Go, "+team[2].name + "!")
+               return
+           elif not (team[1].defeated) :
+				team[0].active = False;
+				team[1].active = True;
+				if not (team[0].defeated) :
+                    println(team[0].name+"  is switching out!")
+				println("Go, "+team[1].name+"!")
+				return
+            else :
+				return
+        elif (team[1].active):
+            if not (team[0].defeated) :
+                team[1].active = False
+				team[0].active = True
+				if not (team[1].defeated) :
+                    println(team[1].name + " is switching out!")
+				println("Go, "+team[0].name+"!");
+				return
+            elif not (team[2].defeated):
+				team[1].active = False
+				team[2].active = True
+				if not (team[1].defeated) :
+                    println(team[1].name + " is switching out!")
+				println("Go, "+team[2].name+"!")
+				return
+            else :
+				return
+		elif (team[2].active) :
+			if not (team[1].defeated):
+				team[2].active = False
+				team[1].active = True
+				if not (team[2].defeated):
+                    println(team[2].name+"  is switching out!")
+				println("Go, "+team[1].name+"!")
+				return
+        elif not (team[0].defeated):
+				team[2].active = False
+				team[0].active = True
+				if not(team[2].defeated):
+                    println(team[2].name+"  is switching out!")
+				println("Go, "+team[0].name+"!")
+				return
+            else :
+				return
+		else :
+			return
