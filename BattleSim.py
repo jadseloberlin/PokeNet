@@ -7,7 +7,7 @@ from basicAI import BasicAI
 from mon import Mon
 
 class BattleSim:
-    types = ["fire", "water", "grass", "bug", "ghost","psychic","dragon","electric", "rock", "ice", "poison", "normal", "ground","fighting", "flying","none"]
+    types = ["fire", "water", "grass", "bug", "ghost","psychic","dragon","electric", "rock", "ice", "poison", "normal", "ground","fighting", "flying","dark","steel","fairy","none"]
     validMon = {}
     team1 = []
     team2 = []
@@ -18,7 +18,7 @@ class BattleSim:
     def createBasicMap():
         rtn = {}
         for t in types:
-            trn[t] = 1.0
+            rtn[t] = 1.0
         return rtn
 
     def contents(par):
@@ -30,7 +30,7 @@ class BattleSim:
 
     def BattleSim(p1AI, p2AI, p1Mon1, p1Mon2,  p1Mon3,  p2Mon1, p2Mon2,  p2Mon3):
         # populate type matchups
-		fireAttack = {}
+		fireAttack = createBasicMap()
 		fireAttack["fire"] = .5
 		fireAttack["water"] = .5;
 		fireAttack.put["grass"] = 2.0
@@ -41,7 +41,7 @@ class BattleSim:
 		fireAttack["dragon"] = .5
 		atkMult["fire"] = fireAttack
 
-		waterAttack = {}
+		waterAttack = createBasicMap()
 		waterAttack["dragon"] = .5
 		waterAttack["grass"] = .5
 		waterAttack["fire"] = 2.0
@@ -50,7 +50,7 @@ class BattleSim:
 		waterAttack["water"] = .5
 		atkMult["water"] = waterAttack
 
-		grassAttack =  {}
+		grassAttack =  createBasicMap()
 		grassAttack["water"] = 2.0
 		grassAttack["rock"] = 2.0
 		grassAttack["ground"] = 2.0
@@ -63,7 +63,7 @@ class BattleSim:
 		grassAttack["steel"] = .5
 		atkMult["grass"] = grassAttack
 
-		electricAttack = {}
+		electricAttack = createBasicMap()
 		electricAttack["water"] = 2.0
 		electricAttack["ground"] = 0.0
 		electricAttack["flying"] = 2.0
@@ -72,7 +72,7 @@ class BattleSim:
 		electricAttack["grass"] = .5
 		atkMult["electric"] = electricAttack
 
-		iceAttack = {}
+		iceAttack = createBasicMap()
 		iceAttack["ice"] = .5
 		iceAttack["steel"] = .5
 		iceAttack["water"] = .5
@@ -83,14 +83,14 @@ class BattleSim:
 		iceAttack["ground"] = 2.0
 		atkMult["ice"] = iceAttack
 
-		ghostAttack = {}
+		ghostAttack = createBasicMap()
 		ghostAttack["ghost"] = 2.0
 		ghostAttack["psychic"] = 2.0
 		ghostAttack["dark"] = .5
 		ghostAttack["normal"] = 0.0
 	    atkMult["ghost"] = ghostAttack
 
-		groundAttack = {}
+		groundAttack = createBasicMap()
 		groundAttack["electric"] = 2.0
 		groundAttack["fire"] = 2.0
 		groundAttack["poison"] = 2.0
@@ -101,7 +101,7 @@ class BattleSim:
 		groundAttack["flying"] = 0.0
 		atkMult["ground"] = groundAttack
 
-		fairyAttack = {}
+		fairyAttack = createBasicMap()
 		fairyAttack["dark"] = 2.0
 		fairyAttack["dragon"] = 2.0
 		fairyAttack["fighting"] = 2.0
@@ -110,20 +110,20 @@ class BattleSim:
 		fairyAttack["steel"] = .5
 		atkMult["fairy"] = fairyAttack
 
-		bugAttack = {}
-		bugAttack["dark"] 2.0
-		bugAttack["grass"] 2.0
-		bugAttack["psychic"] 2.0
-		bugAttack["fairy"].5
-		bugAttack["fighting"] .5
-		bugAttack["flying"] .5
-		bugAttack["ghost"] .5
-		bugAttack["poison"] .5
-		bugAttack["fire"] .5
-		bugAttack["steel"] .5
+		bugAttack = createBasicMap()
+		bugAttack["dark"] = 2.0
+		bugAttack["grass"] = 2.0
+		bugAttack["psychic"] = 2.0
+		bugAttack["fairy"] = .5
+		bugAttack["fighting"] = .5
+		bugAttack["flying"] = .5
+		bugAttack["ghost"] = .5
+		bugAttack["poison"] = .5
+		bugAttack["fire"] = .5
+		bugAttack["steel"] = .5
 		atkMult["bug"] bugAttack
 
-		psychicAttack = {}
+		psychicAttack = createBasicMap()
 		psychicAttack["fighting"] = 2.0
 		psychicAttack["poison"] = 2.0
 		psychicAttack["psychic"] = .5
@@ -131,7 +131,7 @@ class BattleSim:
 		psychicAttack["dark"] = 0.0
 		atkMult["psychic"] = psychicAttack
 
-		poisonAttack = {}
+		poisonAttack = createBasicMap()
 		poisonAttack["fairy"] = 2.0
 		poisonAttack["grass"] = 2.0
 		poisonAttack["ground"] = .5
@@ -141,7 +141,7 @@ class BattleSim:
 		poisonAttack["steel"] = 0.0
 		atkMult["poison"] = poisonAttack
 
-		rockAttack = {}
+		rockAttack = createBasicMap()
 		rockAttack["bug"] = 2.0
 		rockAttack["fire"] = 2.0
 		rockAttack["flying"] = 2.0
@@ -151,7 +151,7 @@ class BattleSim:
 		rockAttack["steel"] = .5
 		atkMult["rock"] = rockAttack
 
-		flyingAttack = {}
+		flyingAttack = createBasicMap()
 		flyingAttack["bug"] = 2.0
 		flyingAttack["fighting"] = 2.0
 		flyingAttack["grass"] = 2.0
@@ -160,13 +160,13 @@ class BattleSim:
 		flyingAttack["steel"] = .5
 		atkMult["flying"] = flyingAttack
 
-		normalAttack = {}
+		normalAttack = createBasicMap()
 		normalAttack["rock"] = .5
 		normalAttack["steel"] = .5
 		normalAttack["ghost"] = 0.0
 		atkMult["normal"] = normalAttack
 
-		steelAttack = {}
+		steelAttack = createBasicMap()
 		steelAttack["fairy"] = 2.0
 		steelAttack["ice"] = 2.0
 		steelAttack["rock"] = 2.0
@@ -176,13 +176,13 @@ class BattleSim:
 		steelAttack["water"] = .5
 		atkMult["steel"] = steelAttack
 
-		dragonAttack = {}
+		dragonAttack = createBasicMap()
 		dragonAttack["dragon"] = 2.0
 		dragonAttack["steel"] = .5
 		dragonAttack["fairy"] = 0.0
 		atkMult["dragon"] = dragonAttack
 
-		fightingAttack = {}
+		fightingAttack = createBasicMap()
 		fightingAttack["normal"] = 2.0
 		fightingAttack["dark"] = 2.0
 		fightingAttack["ice"] = 2.0
@@ -196,7 +196,7 @@ class BattleSim:
 		fightingAttack["ghost"] =0.0
 		atkMult["fighting"] = fightingAttack
 
-		darkAttack = {}
+		darkAttack = createBasicMap()
 		darkAttack["ghost"] = 2.0
 		darkAttack["psychic"] = 2.0
 		darkAttack["dark"] = .5
@@ -272,3 +272,58 @@ class BattleSim:
             return team[1];
         else:
             return team[2];
+
+    def switch1(team)  #what if nothing to switch to
+	   if (team[0].active):
+           if not (team[1].defeated) :
+               team[0].active = False;
+               team[1].active = True;
+               if not (team[0].defeated):
+                   println(team[0].name+"  is switching out!")
+               println("Go, "+team[1].name + "!")
+               return
+           elif not (team[2].defeated) :
+				team[0].active = False;
+				team[2].active = True;
+				if not (team[0].defeated) :
+                    println(team[0].name+"  is switching out!")
+				println("Go, "+team[2].name+"!")
+				return
+            else :
+				return
+        elif (team[1].active):
+            if not (team[2].defeated) :
+                team[1].active = False
+				team[2].active = True
+				if not (team[1].defeated) :
+                    println(team[1].name + " is switching out!")
+				println("Go, "+team[2].name+"!");
+				return
+            elif not (team[0].defeated):
+				team[1].active = False
+				team[0].active = True
+				if not (team[1].defeated) :
+                    println(team[1].name + " is switching out!")
+				println("Go, "+team[0].name+"!")
+				return
+            else :
+				return
+		elif (team[2].active) :
+			if not (team[0].defeated):
+				team[2].active = False
+				team[0].active = True
+				if not (team[2].defeated):
+                    println(team[2].name+"  is switching out!")
+				println("Go, "+team[0].name+"!")
+				return
+            elif not (team[1].defeated):
+				team[2].active = False
+				team[1].active = True
+				if not(team[2].defeated):
+                    println(team[2].name+"  is switching out!")
+				println("Go, "+team[1].name+"!")
+				return
+            else :
+				return
+		else :
+			return
