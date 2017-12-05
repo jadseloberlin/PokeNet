@@ -377,179 +377,145 @@ class BattleSim:
 
 
 	#returns true if p1 wins, false if p2 wins
-    def battle() {
+    def battle(self) {
 	  turns = 0
-      while not (isDefeated(team1)) and not (isDefeated(team2)):
+      while not (isDefeated(self.team1)) and not (isDefeated(self.team2)):
           println()
           println("This is turn number "+(++turns))
-          active1 = active(teamNum1)
-          active2 = active(teamNum2)
-          move1 = p1.chooseMove(teamNum1, active2, atkMult)
-          move2 = p2.chooseMove(teamNum2, active1, atkMult)
+          active1 = active(self.team1)
+          active2 = active(self.team2)
+          move1 = self.p1.chooseMove(teamNum1, active2, atkMult)
+          move2 = self.p2.chooseMove(teamNum2, active1, atkMult)
           if (move1 == "switch1"):
 				#if player 1 is switching to first available
                 if (move2 == "switch1"):
 					#if player 2 is also switching to first
                     if (active1.speed >= active2.speed):
 						#if p1 is faster
-                        switch1(teamNum1)
-						switch1(teamNum2)
+                        switch1(self.team1)
+						switch1(self.team2)
 					else
 						#if p2 is faster
-						switch1(teamNum2)
-						switch1(teamNum1)
+						switch1(self.team2)
+						switch1(self.team1)
 				elif(move2 == "switch2"):
 					#if p2 is switching to second available
 					if (active1.speed >= active2.speed):
 						#if p1 is faster
-						switch1(teamNum1)
-						switch2(teamNum2)
+						switch1(self.team1)
+						switch2(self.team2)
 					else:
 						#if p2 is faster
-						switch2(teamNum2)
-						switch1(teamNum1)
+						switch2(self.team2)
+						switch1(self.team1)
 				elif(move2=="quick"):
 					#p2 is attacking quickly
-                    switch1(teamNum1)
-					quick(active2, active(teamNum1), teamNum1)
+                    switch1(self.team1)
+					quick(active2, active(self.team1), self.team1)
 				else:
 					#p2 is attacking strongly
-					switch1(teamNum1)
-					strong(active2, active(teamNum1), teamNum1)
+					switch1(self.team1)
+					strong(active2, active(self.team1), self.team1)
 			elif (move1 == "switch2"):
 				#p1 switches to second available
 				if (move2 == "switch2"):
 					#if player 2 is also switching to second
 					if (active1.speed >= active2.speed):
 						#if p1 is faster
-						switch2(teamNum1)
-						switch2(teamNum2)
+						switch2(self.team1)
+						switch2(self.team2)
 					else :
 						#if p2 is faster
-						switch2(teamNum2)
-						switch2(teamNum1)
+						switch2(self.team2)
+						switch2(self.team1)
 				elif (move2 == "switch1"):
 					#if p2 is switching to first available
 					if (active1.speed >= active2.speed):
 						#if p1 is faster
-						switch2(teamNum1)
-						switch1(teamNum2)
+						switch2(self.team1)
+						switch1(self.team2)
 					else:
 						#if p2 is faster
-						switch1(teamNum2)
-						switch2(teamNum1)
+						switch1(self.team2)
+						switch2(self.team1)
 				elif (move2 == "quick"):
 					#p2 is attacking quickly
-					switch2(teamNum1)
-					quick(active2, active(teamNum1), teamNum1)
+					switch2(self.team1)
+					quick(active2, active(self.team1), self.team1)
 				else :
 					#p2 is attacking strongly
-					switch2(teamNum1)
-					strong(active2, active(teamNum1), teamNum1)
+					switch2(self.team1)
+					strong(active2, active(self.team1), self.team1)
 			elif(move1 == "quick"):
 				#p1 chooses quick
-				if (move2 == "switch1"): #GO FROM HERE
-					//p2 switches to first available
-					switch1(teamNum2);
-					quick(active1, active(teamNum2), teamNum2);
-				}
-				else if(move2.equals("switch2")) {
-					//p2 switches to second available
-					switch2(teamNum2);
-					quick(active1, active(teamNum2), teamNum2);
-				}
-				else {
-					//p2 attacks
-					if(active1.speed>=active2.speed) {
-						//p1 is faster
-						quick(active1, active2,teamNum2);
-						if(isDefeated(teamNum2)||active2.defeated) continue;
-						if(move2.equals("quick")) {
-							//p2 uses a quick attack
-							quick(active(teamNum2), active1, teamNum1);
-						}
-						else {
-							//p2 uses a strong attack
-							strong(active(teamNum2), active1, teamNum1);
-						}
-					}
-					else {
-						//p2 is faster
-						if(move2.equals("quick")) {
-							//p2 uses a quick attack
-							quick(active2, active1, teamNum1);
-						}
-						else {
-							//p2 uses a strong attack
-							strong(active2, active1, teamNum1);
-						}
-						if(isDefeated(teamNum1)) {
-						//	System.out.println(active1+" fainted!");
-							continue;
-						}
-						if(active1.defeated) continue;
-						quick(active1, active2, teamNum2);
-					}
-				}
-
-			}
-			else {
-				//p1 chooses strong
-				if(move2.equals("switch1")) {
-					//p2 switches to first available
-					switch1(teamNum2);
-					strong(active1, active(teamNum2), teamNum2);
-				}
-				else if(move2.equals("switch2")) {
-					//p2 switches to second available
-					switch2(teamNum2);
-					strong(active1, active(teamNum2), teamNum2);
-				}
-				else {
-					//p2 attacks
-					if(active1.speed>=active2.speed) {
-						//p1 is faster
-						strong(active1, active2, teamNum2);
-						if(isDefeated(teamNum2)||active2.defeated) continue;
-						if(move2.equals("quick")) {
-							//p2 uses a quick attack
-							quick(active(teamNum2), active1, teamNum1);
-						}
-						else {
-							//p2 uses a strong attack
-							strong(active(teamNum2), active1, teamNum1);
-						}
-					}
-					else {
-						//p2 is faster
-						if(move2.equals("quick")) {
-							//p2 uses a quick attack
-							quick(active2, active1, teamNum1);
-						}
-						else {
-							//p2 uses a strong attack
-							strong(active2, active1, teamNum1);
-						}
-						if(isDefeated(teamNum1)) {
-							continue;
-						}
-						if(active1.active) {
-							//if active1 wasn't knocked out
-							strong(active1, active2, teamNum2);
-						}
-					}
-				}
-
-			}
-
-
-
-
-
-
-		}
-
-
-		return isDefeated(teamNum2);
-
-	}
+				if (move2 == "switch1"):
+					#p2 switches to first available
+					switch1(self.team2)
+					quick(active1, active(self.team2), self.team2)
+				elif(move2 == "switch2"):
+					#p2 switches to second available
+					switch2(self.team2)
+					quick(active1, active(self.team2), self.team2)
+				else
+					#p2 attacks
+					if (active1.speed >= active2.speed):
+						#p1 is faster
+						quick(active1, active2,self.team2)
+						if ( ( isDefeated(teamNum2) ) or (active2.defeated) ):
+                             continue
+						if (move2 == "quick"):
+							#p2 uses a quick attack
+							quick(active(self.team2), active1, self.team1)
+						else:
+							#p2 uses a strong attack
+							strong(active(self.team2), active1, self.team1)
+					else:
+						#p2 is faster
+						if(move2 == "quick"):
+							#p2 uses a quick attack
+							quick(active2, active1, self.team1)
+						else:
+							#p2 uses a strong attack
+							strong(active2, active1, self.team1)
+						if (isDefeated(self.team1)):
+							continue
+						if(active1.defeated):
+                            continue
+						quick(active1, active2, self.team2)
+			else:
+				#p1 chooses strong
+				if (move2 == "switch1"):
+					#p2 switches to first available
+					switch1(self.team2)
+					strong(active1, active(self.team2), self.team2)
+				elif (move2 == "switch2"):
+					#p2 switches to second available
+					switch2(self.team2)
+					strong(active1, active(self.team2), self.team2)
+				else :
+					#p2 attacks
+					if (active1.speed >= active2.speed):
+						#p1 is faster
+						strong(active1, active2, self.team2)
+						if ((isDefeated(teamNum2)) or (active2.defeated) ):
+                            continue
+						if(move2 == "quick"):
+							#p2 uses a quick attack
+							quick(active(self.team2), active1, self.team1)
+						else:
+							#p2 uses a strong attack
+							strong(active(self.team2), active1, self.team1)
+					else:
+						#p2 is faster
+						if (move2 == "quick"):
+							#p2 uses a quick attack
+							quick(active2, active1, self.team1)
+						else:
+							#p2 uses a strong attack
+							strong(active2, active1, self.team1)
+						if(isDefeated(self.team1)):
+							continue
+						if(active1.active):
+							#if active1 wasn't knocked out
+							strong(active1, active2, self.team2)
+        return isDefeated(teamNum2)
