@@ -6,15 +6,7 @@ from userControl import UserControl
 from basicAI import BasicAI
 from mon import Mon
 
-class BattleSim:
-    self.types = ["fire", "water", "grass", "bug", "ghost","psychic","dragon","electric", "rock", "ice", "poison", "normal", "ground","fighting", "flying","dark","steel","fairy","none"]
-    self.validMon = {}
-    self.team1 = []
-    self.team2 = []
-    self.atkMult = {}
-    self.p1 = None
-    self.p2 = None
-
+class BattleSim(object):
     def createBasicMap(self):
         rtn = {}
         for t in self.types:
@@ -28,7 +20,14 @@ class BattleSim:
         sb += "]"
         return sb
 
-    def BattleSim(self,p1AI, p2AI, p1Mon1, p1Mon2,  p1Mon3,  p2Mon1, p2Mon2,  p2Mon3):
+    def __init__ (self, p1AI, p2AI, p1Mon1, p1Mon2,  p1Mon3,  p2Mon1, p2Mon2,  p2Mon3):
+        self.types = ["fire", "water", "grass", "bug", "ghost","psychic","dragon","electric", "rock", "ice", "poison", "normal", "ground","fighting", "flying","dark","steel","fairy","none"]
+        self.validMon = {}
+        self.team1 = []
+        self.team2 = []
+        self.atkMult = {}
+        self.p1 = None
+        self.p2 = None
         # populate type matchups
 		fireAttack = createBasicMap()
 		fireAttack["fire"] = .5
@@ -39,7 +38,7 @@ class BattleSim:
 		fireAttack["rock"] = .5
 		fireAttack["steel"] = 2.0
 		fireAttack["dragon"] = .5
-		atkMult["fire"] = fireAttack
+		self.atkMult["fire"] = fireAttack
 
 		waterAttack = createBasicMap()
 		waterAttack["dragon"] = .5
@@ -48,7 +47,7 @@ class BattleSim:
 		waterAttack["rock"] = 2.0
 		waterAttack["ground"] = 2.0
 		waterAttack["water"] = .5
-		atkMult["water"] = waterAttack
+		self.atkMult["water"] = waterAttack
 
 		grassAttack =  createBasicMap()
 		grassAttack["water"] = 2.0
@@ -61,7 +60,7 @@ class BattleSim:
 		grassAttack["dragon"] = .5
 		grassAttack["flying"] = .5
 		grassAttack["steel"] = .5
-		atkMult["grass"] = grassAttack
+		self.atkMult["grass"] = grassAttack
 
 		electricAttack = createBasicMap()
 		electricAttack["water"] = 2.0
@@ -70,7 +69,7 @@ class BattleSim:
 		electricAttack["dragon"] = .5
 		electricAttack["electric"] = .5
 		electricAttack["grass"] = .5
-		atkMult["electric"] = electricAttack
+		self.atkMult["electric"] = electricAttack
 
 		iceAttack = createBasicMap()
 		iceAttack["ice"] = .5
@@ -81,14 +80,14 @@ class BattleSim:
 		iceAttack["flying"] = 2.0
 		iceAttack["grass"] = 2.0
 		iceAttack["ground"] = 2.0
-		atkMult["ice"] = iceAttack
+		self.atkMult["ice"] = iceAttack
 
 		ghostAttack = createBasicMap()
 		ghostAttack["ghost"] = 2.0
 		ghostAttack["psychic"] = 2.0
 		ghostAttack["dark"] = .5
 		ghostAttack["normal"] = 0.0
-	    atkMult["ghost"] = ghostAttack
+	    self.atkMult["ghost"] = ghostAttack
 
 		groundAttack = createBasicMap()
 		groundAttack["electric"] = 2.0
@@ -99,7 +98,7 @@ class BattleSim:
 		groundAttack["bug"] = .5
 		groundAttack["grass"] = .5
 		groundAttack["flying"] = 0.0
-		atkMult["ground"] = groundAttack
+		self.atkMult["ground"] = groundAttack
 
 		fairyAttack = createBasicMap()
 		fairyAttack["dark"] = 2.0
@@ -108,7 +107,7 @@ class BattleSim:
 		fairyAttack["fire"] = .5
 		fairyAttack["poison"] = .5
 		fairyAttack["steel"] = .5
-		atkMult["fairy"] = fairyAttack
+		self.atkMult["fairy"] = fairyAttack
 
 		bugAttack = createBasicMap()
 		bugAttack["dark"] = 2.0
@@ -121,7 +120,7 @@ class BattleSim:
 		bugAttack["poison"] = .5
 		bugAttack["fire"] = .5
 		bugAttack["steel"] = .5
-		atkMult["bug"] bugAttack
+		self.atkMult["bug"] bugAttack
 
 		psychicAttack = createBasicMap()
 		psychicAttack["fighting"] = 2.0
@@ -129,7 +128,7 @@ class BattleSim:
 		psychicAttack["psychic"] = .5
 		psychicAttack["steel"] = .5
 		psychicAttack["dark"] = 0.0
-		atkMult["psychic"] = psychicAttack
+		self.atkMult["psychic"] = psychicAttack
 
 		poisonAttack = createBasicMap()
 		poisonAttack["fairy"] = 2.0
@@ -139,7 +138,7 @@ class BattleSim:
 		poisonAttack["ghost"] = .5
 		poisonAttack["poison"] = .5
 		poisonAttack["steel"] = 0.0
-		atkMult["poison"] = poisonAttack
+		self.atkMult["poison"] = poisonAttack
 
 		rockAttack = createBasicMap()
 		rockAttack["bug"] = 2.0
@@ -149,7 +148,7 @@ class BattleSim:
 		rockAttack["fighting"] = .5
 		rockAttack["ground"] = .5
 		rockAttack["steel"] = .5
-		atkMult["rock"] = rockAttack
+		self.atkMult["rock"] = rockAttack
 
 		flyingAttack = createBasicMap()
 		flyingAttack["bug"] = 2.0
@@ -158,13 +157,13 @@ class BattleSim:
 		flyingAttack["electric"] = .5
 		flyingAttack["rock"] = .5
 		flyingAttack["steel"] = .5
-		atkMult["flying"] = flyingAttack
+		self.atkMult["flying"] = flyingAttack
 
 		normalAttack = createBasicMap()
 		normalAttack["rock"] = .5
 		normalAttack["steel"] = .5
 		normalAttack["ghost"] = 0.0
-		atkMult["normal"] = normalAttack
+		self.atkMult["normal"] = normalAttack
 
 		steelAttack = createBasicMap()
 		steelAttack["fairy"] = 2.0
@@ -174,13 +173,13 @@ class BattleSim:
 		steelAttack["fire"] = .5
 		steelAttack["steel"] = .5
 		steelAttack["water"] = .5
-		atkMult["steel"] = steelAttack
+		self.atkMult["steel"] = steelAttack
 
 		dragonAttack = createBasicMap()
 		dragonAttack["dragon"] = 2.0
 		dragonAttack["steel"] = .5
 		dragonAttack["fairy"] = 0.0
-		atkMult["dragon"] = dragonAttack
+		self.atkMult["dragon"] = dragonAttack
 
 		fightingAttack = createBasicMap()
 		fightingAttack["normal"] = 2.0
@@ -194,7 +193,7 @@ class BattleSim:
 		fightingAttack["poison"] = .5
 		fightingAttack["psychic"] = .5
 		fightingAttack["ghost"] =0.0
-		atkMult["fighting"] = fightingAttack
+		self.atkMult["fighting"] = fightingAttack
 
 		darkAttack = createBasicMap()
 		darkAttack["ghost"] = 2.0
@@ -202,7 +201,7 @@ class BattleSim:
 		darkAttack["dark"] = .5
 		darkAttack["fairy"] = .5
 		darkAttack["fighting"] = .5
-		atkMult["dark"] = darkAttack
+		self.atkMult["dark"] = darkAttack
 
 
 		#load AI
@@ -253,11 +252,11 @@ class BattleSim:
 		self.team2[1] = m22;
 		self.team2[2] = m23;
 
-    def isDefeated(team):
+    def isDefeated(self, team):
         # returns whether or not team has no usable Pokemon left
 	   return team[0].defeated and team[1].defeated & team[2].defeated
 
-   	def active(team):
+   	def active(self, team):
         if team[0].active :
 			return team[0];
         elif team[1].active:
@@ -265,7 +264,7 @@ class BattleSim:
         else:
             return team[2];
 
-    def switch1(team)  #what if nothing to switch to
+    def switch1(self, team)  #what if nothing to switch to
 	   if (team[0].active):
            if not (team[1].defeated) :
                team[0].active = False;
@@ -320,7 +319,7 @@ class BattleSim:
 		else :
 			return
 
-    def switch2(team)  #what if nothing to switch to
+    def switch2(self, team)  #what if nothing to switch to
 	   if (team[0].active):
            if not (team[2].defeated) :
                team[0].active = False;
@@ -379,7 +378,7 @@ class BattleSim:
 	#returns true if p1 wins, false if p2 wins
     def battle(self) {
 	  turns = 0
-      while not (isDefeated(self.team1)) and not (isDefeated(self.team2)):
+      while not (self.isDefeated(self.team1)) and not (self.isDefeated(self.team2)):
           println()
           println("This is turn number "+(++turns))
           active1 = active(self.team1)
@@ -392,130 +391,130 @@ class BattleSim:
 					#if player 2 is also switching to first
                     if (active1.speed >= active2.speed):
 						#if p1 is faster
-                        switch1(self.team1)
-						switch1(self.team2)
+                        self.switch1(self.team1)
+						self.switch1(self.team2)
 					else
 						#if p2 is faster
-						switch1(self.team2)
-						switch1(self.team1)
+						self.switch1(self.team2)
+						self.switch1(self.team1)
 				elif(move2 == "switch2"):
 					#if p2 is switching to second available
 					if (active1.speed >= active2.speed):
 						#if p1 is faster
-						switch1(self.team1)
-						switch2(self.team2)
+						self.switch1(self.team1)
+						self.switch2(self.team2)
 					else:
 						#if p2 is faster
-						switch2(self.team2)
-						switch1(self.team1)
+						self.switch2(self.team2)
+						self.switch1(self.team1)
 				elif(move2=="quick"):
 					#p2 is attacking quickly
-                    switch1(self.team1)
-					quick(active2, active(self.team1), self.team1)
+                    self.switch1(self.team1)
+					self.quick(active2, active(self.team1), self.team1)
 				else:
 					#p2 is attacking strongly
-					switch1(self.team1)
-					strong(active2, active(self.team1), self.team1)
+					self.switch1(self.team1)
+					self.strong(active2, active(self.team1), self.team1)
 			elif (move1 == "switch2"):
 				#p1 switches to second available
 				if (move2 == "switch2"):
 					#if player 2 is also switching to second
 					if (active1.speed >= active2.speed):
 						#if p1 is faster
-						switch2(self.team1)
-						switch2(self.team2)
+						self.switch2(self.team1)
+						self.switch2(self.team2)
 					else :
 						#if p2 is faster
-						switch2(self.team2)
-						switch2(self.team1)
+						self.switch2(self.team2)
+						self.switch2(self.team1)
 				elif (move2 == "switch1"):
 					#if p2 is switching to first available
 					if (active1.speed >= active2.speed):
 						#if p1 is faster
-						switch2(self.team1)
-						switch1(self.team2)
+						self.switch2(self.team1)
+						self.switch1(self.team2)
 					else:
 						#if p2 is faster
-						switch1(self.team2)
-						switch2(self.team1)
+						self.switch1(self.team2)
+						self.switch2(self.team1)
 				elif (move2 == "quick"):
 					#p2 is attacking quickly
-					switch2(self.team1)
-					quick(active2, active(self.team1), self.team1)
+					self.switch2(self.team1)
+					self.quick(active2, active(self.team1), self.team1)
 				else :
 					#p2 is attacking strongly
-					switch2(self.team1)
-					strong(active2, active(self.team1), self.team1)
+					self.switch2(self.team1)
+					self.strong(active2, active(self.team1), self.team1)
 			elif(move1 == "quick"):
 				#p1 chooses quick
 				if (move2 == "switch1"):
 					#p2 switches to first available
-					switch1(self.team2)
-					quick(active1, active(self.team2), self.team2)
+					self.switch1(self.team2)
+					self.quick(active1, active(self.team2), self.team2)
 				elif(move2 == "switch2"):
 					#p2 switches to second available
-					switch2(self.team2)
-					quick(active1, active(self.team2), self.team2)
+					self.switch2(self.team2)
+					self.quick(active1, active(self.team2), self.team2)
 				else
 					#p2 attacks
 					if (active1.speed >= active2.speed):
 						#p1 is faster
-						quick(active1, active2,self.team2)
-						if ( ( isDefeated(teamNum2) ) or (active2.defeated) ):
+						self.quick(active1, active2,self.team2)
+						if ( ( self.isDefeated(teamNum2) ) or (active2.defeated) ):
                              continue
 						if (move2 == "quick"):
 							#p2 uses a quick attack
-							quick(active(self.team2), active1, self.team1)
+							self.quick(active(self.team2), active1, self.team1)
 						else:
 							#p2 uses a strong attack
-							strong(active(self.team2), active1, self.team1)
+							self.strong(active(self.team2), active1, self.team1)
 					else:
 						#p2 is faster
 						if(move2 == "quick"):
 							#p2 uses a quick attack
-							quick(active2, active1, self.team1)
+							self.quick(active2, active1, self.team1)
 						else:
 							#p2 uses a strong attack
-							strong(active2, active1, self.team1)
-						if (isDefeated(self.team1)):
+							self.strong(active2, active1, self.team1)
+						if (self.isDefeated(self.team1)):
 							continue
 						if(active1.defeated):
                             continue
-						quick(active1, active2, self.team2)
+						self.quick(active1, active2, self.team2)
 			else:
 				#p1 chooses strong
 				if (move2 == "switch1"):
 					#p2 switches to first available
-					switch1(self.team2)
-					strong(active1, active(self.team2), self.team2)
+					self.switch1(self.team2)
+					self.strong(active1, active(self.team2), self.team2)
 				elif (move2 == "switch2"):
 					#p2 switches to second available
-					switch2(self.team2)
-					strong(active1, active(self.team2), self.team2)
+					self.switch2(self.team2)
+					self.strong(active1, active(self.team2), self.team2)
 				else :
 					#p2 attacks
 					if (active1.speed >= active2.speed):
 						#p1 is faster
-						strong(active1, active2, self.team2)
-						if ((isDefeated(teamNum2)) or (active2.defeated) ):
+						self.strong(active1, active2, self.team2)
+						if ((self.isDefeated(teamNum2)) or (active2.defeated) ):
                             continue
 						if(move2 == "quick"):
 							#p2 uses a quick attack
-							quick(active(self.team2), active1, self.team1)
+							self.quick(active(self.team2), active1, self.team1)
 						else:
 							#p2 uses a strong attack
-							strong(active(self.team2), active1, self.team1)
+							self.strong(active(self.team2), active1, self.team1)
 					else:
 						#p2 is faster
 						if (move2 == "quick"):
 							#p2 uses a quick attack
-							quick(active2, active1, self.team1)
+							self.quick(active2, active1, self.team1)
 						else:
 							#p2 uses a strong attack
-							strong(active2, active1, self.team1)
-						if(isDefeated(self.team1)):
+							self.strong(active2, active1, self.team1)
+						if(self.isDefeated(self.team1)):
 							continue
 						if(active1.active):
 							#if active1 wasn't knocked out
-							strong(active1, active2, self.team2)
-        return isDefeated(teamNum2)
+							self.strong(active1, active2, self.team2)
+        return self.isDefeated(teamNum2)
