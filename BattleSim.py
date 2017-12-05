@@ -46,7 +46,7 @@ class BattleSim:
 		waterAttack["water"] = .5
 		atkMult["water"] = waterAttack
 
-		HashMap<String, Double> grassAttack = createBasicMap();
+		grassAttack =  {}
 		grassAttack["water"] = 2.0
 		grassAttack["rock"] = 2.0
 		grassAttack["ground"] = 2.0
@@ -59,7 +59,7 @@ class BattleSim:
 		grassAttack["steel"] = .5
 		atkMult["grass"] = grassAttack
 
-		HashMap<String, Double> electricAttack = createBasicMap();
+		electricAttack = {}
 		electricAttack["water"] = 2.0
 		electricAttack["ground"] = 0.0
 		electricAttack["flying"] = 2.0
@@ -68,7 +68,7 @@ class BattleSim:
 		electricAttack["grass"] = .5
 		atkMult["electric"] = electricAttack
 
-		HashMap<String, Double> iceAttack = createBasicMap();
+		iceAttack = {}
 		iceAttack["ice"] = .5
 		iceAttack["steel"] = .5
 		iceAttack["water"] = .5
@@ -79,14 +79,14 @@ class BattleSim:
 		iceAttack["ground"] = 2.0
 		atkMult["ice"] = iceAttack
 
-		HashMap<String, Double> ghostAttack = createBasicMap();
+		ghostAttack = {}
 		ghostAttack["ghost"] = 2.0
 		ghostAttack["psychic"] = 2.0
 		ghostAttack["dark"] = .5
 		ghostAttack["normal"] = 0.0
 	    atkMult["ghost"] = ghostAttack
 
-		HashMap<String, Double> groundAttack = createBasicMap();
+		groundAttack = {}
 		groundAttack["electric"] = 2.0
 		groundAttack["fire"] = 2.0
 		groundAttack["poison"] = 2.0
@@ -97,7 +97,7 @@ class BattleSim:
 		groundAttack["flying"] = 0.0
 		atkMult["ground"] = groundAttack
 
-		HashMap<String, Double> fairyAttack  = createBasicMap();
+		fairyAttack = {}
 		fairyAttack["dark"] = 2.0
 		fairyAttack["dragon"] = 2.0
 		fairyAttack["fighting"] = 2.0
@@ -106,7 +106,7 @@ class BattleSim:
 		fairyAttack["steel"] = .5
 		atkMult["fairy"] = fairyAttack
 
-		HashMap<String, Double> bugAttack = createBasicMap();
+		bugAttack = {}
 		bugAttack["dark"] 2.0
 		bugAttack["grass"] 2.0
 		bugAttack["psychic"] 2.0
@@ -119,7 +119,7 @@ class BattleSim:
 		bugAttack["steel"] .5
 		atkMult["bug"] bugAttack
 
-		HashMap<String, Double> psychicAttack = createBasicMap();
+		psychicAttack = {}
 		psychicAttack["fighting"] = 2.0
 		psychicAttack["poison"] = 2.0
 		psychicAttack["psychic"] = .5
@@ -127,7 +127,7 @@ class BattleSim:
 		psychicAttack["dark"] = 0.0
 		atkMult["psychic"] = psychicAttack
 
-		HashMap<String, Double> poisonAttack = createBasicMap();
+		poisonAttack = {}
 		poisonAttack["fairy"] = 2.0
 		poisonAttack["grass"] = 2.0
 		poisonAttack["ground"] = .5
@@ -137,7 +137,7 @@ class BattleSim:
 		poisonAttack["steel"] = 0.0
 		atkMult["poison"] = poisonAttack
 
-		HashMap<String, Double> rockAttack = createBasicMap();
+		rockAttack = {}
 		rockAttack["bug"] = 2.0
 		rockAttack["fire"] = 2.0
 		rockAttack["flying"] = 2.0
@@ -147,7 +147,7 @@ class BattleSim:
 		rockAttack["steel"] = .5
 		atkMult["rock"] = rockAttack
 
-		HashMap<String, Double> flyingAttack = createBasicMap();
+		flyingAttack = {}
 		flyingAttack["bug"] = 2.0
 		flyingAttack["fighting"] = 2.0
 		flyingAttack["grass"] = 2.0
@@ -156,13 +156,13 @@ class BattleSim:
 		flyingAttack["steel"] = .5
 		atkMult["flying"] = flyingAttack
 
-		HashMap<String, Double> normalAttack = createBasicMap();
+		normalAttack = {}
 		normalAttack["rock"] = .5
 		normalAttack["steel"] = .5
 		normalAttack["ghost"] = 0.0
 		atkMult["normal"] = normalAttack
 
-		HashMap<String, Double> steelAttack = createBasicMap();
+		steelAttack = {}
 		steelAttack["fairy"] = 2.0
 		steelAttack["ice"] = 2.0
 		steelAttack["rock"] = 2.0
@@ -172,13 +172,13 @@ class BattleSim:
 		steelAttack["water"] = .5
 		atkMult["steel"] = steelAttack
 
-		HashMap<String, Double> dragonAttack = createBasicMap();
+		dragonAttack = {}
 		dragonAttack["dragon"] = 2.0
 		dragonAttack["steel"] = .5
 		dragonAttack["fairy"] = 0.0
 		atkMult["dragon"] = dragonAttack
 
-		HashMap<String, Double> fightingAttack = createBasicMap();
+		fightingAttack = {}
 		fightingAttack["normal"] = 2.0
 		fightingAttack["dark"] = 2.0
 		fightingAttack["ice"] = 2.0
@@ -192,7 +192,7 @@ class BattleSim:
 		fightingAttack["ghost"] =0.0
 		atkMult["fighting"] = fightingAttack
 
-		HashMap<String, Double> darkAttack = createBasicMap();
+		darkAttack = {}
 		darkAttack["ghost"] = 2.0
 		darkAttack["psychic"] = 2.0
 		darkAttack["dark"] = .5
