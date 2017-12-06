@@ -25,5 +25,5 @@ class Mon(object):
         self.defeated = False
 
     def copy(self):
-		rtn = Mon(self.name, self.maxhp, self.attack, self.defense, self.speed, self.quickMoveName, self.quickMovePower, self.quickMoveAcc, self.quickMoveType, self.strongMoveName, self.strongMovePower, self.strongMoveAcc, self.strongMoveType, self.type1, self.type2)
-		return rtn
+        rtn = Mon(self.name, self.maxhp, self.attack, self.defense, self.speed, self.quickMoveName, self.quickMovePower, self.quickMoveAcc, self.quickMoveType, self.strongMoveName, self.strongMovePower, self.strongMoveAcc, self.strongMoveType, self.type1, self.type2)
+        return rtn

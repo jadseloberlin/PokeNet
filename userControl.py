@@ -2,7 +2,8 @@ import sys
 
 class UserControl(object):
     def __init__(self):
-
+        self.nothing = 0
+        
     def chooseMove(self, team, activeOpp, typeMatchups):
         move = input("Please type in move from move list: switch1, switch2, strong, quick :   "  )
         return move

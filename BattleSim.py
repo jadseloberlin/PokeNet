@@ -7,10 +7,11 @@ from basicAI import BasicAI
 from mon import Mon
 import random
 
+def main():
+    battle = BattleSim("basic","basic","Pikachu","Porygon","Piplup","Scrafty","Onix","Gardevoir")
+
 class BattleSim(object):
 
-    def main():
-        battle = BattleSim()
 
     def createBasicMap(self):
         rtn = {}
@@ -26,15 +27,15 @@ class BattleSim(object):
         return sb
 
     def __init__ (self, p1AI, p2AI, p1Mon1, p1Mon2,  p1Mon3,  p2Mon1, p2Mon2,  p2Mon3):
-        self.types = ["fire", "water", "grass", "bug", "ghost","psychic","dragon","electric", "rock", "ice", "poison", "normal", "ground","fighting", "flying","dark","steel","fairy","none"]
+        self.types = ["fire", "water", "grass", "bug", "ghost","psychic","dragon","electric", "rock", "ice", "poison", "normal", "ground","fighting","flying","dark","steel","fairy","none"]
         self.validMon = {}
-        self.team1 = []
-        self.team2 = []
+        self.team1 = [0,0,0]
+        self.team2 = [0,0,0]
         self.atkMult = {}
         self.p1 = None
         self.p2 = None
         # populate type matchups
-        fireAttack = createBasicMap()
+        fireAttack = self.createBasicMap()
         fireAttack["fire"] = .5
         fireAttack["water"] = .5;
         fireAttack["grass"] = 2.0
@@ -45,7 +46,7 @@ class BattleSim(object):
         fireAttack["dragon"] = .5
         self.atkMult["fire"] = fireAttack
 
-        waterAttack = createBasicMap()
+        waterAttack = self.createBasicMap()
         waterAttack["dragon"] = .5
         waterAttack["grass"] = .5
         waterAttack["fire"] = 2.0
@@ -54,7 +55,7 @@ class BattleSim(object):
         waterAttack["water"] = .5
         self.atkMult["water"] = waterAttack
 
-        grassAttack =  createBasicMap()
+        grassAttack =  self.createBasicMap()
         grassAttack["water"] = 2.0
         grassAttack["rock"] = 2.0
         grassAttack["ground"] = 2.0
@@ -67,7 +68,7 @@ class BattleSim(object):
         grassAttack["steel"] = .5
         self.atkMult["grass"] = grassAttack
 
-        electricAttack = createBasicMap()
+        electricAttack = self.createBasicMap()
         electricAttack["water"] = 2.0
         electricAttack["ground"] = 0.0
         electricAttack["flying"] = 2.0
@@ -76,7 +77,7 @@ class BattleSim(object):
         electricAttack["grass"] = .5
         self.atkMult["electric"] = electricAttack
 
-        iceAttack = createBasicMap()
+        iceAttack = self.createBasicMap()
         iceAttack["ice"] = .5
         iceAttack["steel"] = .5
         iceAttack["water"] = .5
@@ -87,14 +88,14 @@ class BattleSim(object):
         iceAttack["ground"] = 2.0
         self.atkMult["ice"] = iceAttack
 
-        ghostAttack = createBasicMap()
+        ghostAttack = self.createBasicMap()
         ghostAttack["ghost"] = 2.0
         ghostAttack["psychic"] = 2.0
         ghostAttack["dark"] = .5
         ghostAttack["normal"] = 0.0
         self.atkMult["ghost"] = ghostAttack
 
-        groundAttack = createBasicMap()
+        groundAttack = self.createBasicMap()
         groundAttack["electric"] = 2.0
         groundAttack["fire"] = 2.0
         groundAttack["poison"] = 2.0
@@ -105,7 +106,7 @@ class BattleSim(object):
         groundAttack["flying"] = 0.0
         self.atkMult["ground"] = groundAttack
 
-        fairyAttack = createBasicMap()
+        fairyAttack = self.createBasicMap()
         fairyAttack["dark"] = 2.0
         fairyAttack["dragon"] = 2.0
         fairyAttack["fighting"] = 2.0
@@ -114,7 +115,7 @@ class BattleSim(object):
         fairyAttack["steel"] = .5
         self.atkMult["fairy"] = fairyAttack
 
-        bugAttack = createBasicMap()
+        bugAttack = self.createBasicMap()
         bugAttack["dark"] = 2.0
         bugAttack["grass"] = 2.0
         bugAttack["psychic"] = 2.0
@@ -127,7 +128,7 @@ class BattleSim(object):
         bugAttack["steel"] = .5
         self.atkMult["bug"] = bugAttack
 
-        psychicAttack = createBasicMap()
+        psychicAttack = self.createBasicMap()
         psychicAttack["fighting"] = 2.0
         psychicAttack["poison"] = 2.0
         psychicAttack["psychic"] = .5
@@ -135,7 +136,7 @@ class BattleSim(object):
         psychicAttack["dark"] = 0.0
         self.atkMult["psychic"] = psychicAttack
 
-        poisonAttack = createBasicMap()
+        poisonAttack = self.createBasicMap()
         poisonAttack["fairy"] = 2.0
         poisonAttack["grass"] = 2.0
         poisonAttack["ground"] = .5
@@ -145,7 +146,7 @@ class BattleSim(object):
         poisonAttack["steel"] = 0.0
         self.atkMult["poison"] = poisonAttack
 
-        rockAttack = createBasicMap()
+        rockAttack = self.createBasicMap()
         rockAttack["bug"] = 2.0
         rockAttack["fire"] = 2.0
         rockAttack["flying"] = 2.0
@@ -155,7 +156,7 @@ class BattleSim(object):
         rockAttack["steel"] = .5
         self.atkMult["rock"] = rockAttack
 
-        flyingAttack = createBasicMap()
+        flyingAttack = self.createBasicMap()
         flyingAttack["bug"] = 2.0
         flyingAttack["fighting"] = 2.0
         flyingAttack["grass"] = 2.0
@@ -164,13 +165,13 @@ class BattleSim(object):
         flyingAttack["steel"] = .5
         self.atkMult["flying"] = flyingAttack
 
-        normalAttack = createBasicMap()
+        normalAttack = self.createBasicMap()
         normalAttack["rock"] = .5
         normalAttack["steel"] = .5
         normalAttack["ghost"] = 0.0
         self.atkMult["normal"] = normalAttack
 
-        steelAttack = createBasicMap()
+        steelAttack = self.createBasicMap()
         steelAttack["fairy"] = 2.0
         steelAttack["ice"] = 2.0
         steelAttack["rock"] = 2.0
@@ -180,13 +181,13 @@ class BattleSim(object):
         steelAttack["water"] = .5
         self.atkMult["steel"] = steelAttack
 
-        dragonAttack = createBasicMap()
+        dragonAttack = self.createBasicMap()
         dragonAttack["dragon"] = 2.0
         dragonAttack["steel"] = .5
         dragonAttack["fairy"] = 0.0
         self.atkMult["dragon"] = dragonAttack
 
-        fightingAttack = createBasicMap()
+        fightingAttack = self.createBasicMap()
         fightingAttack["normal"] = 2.0
         fightingAttack["dark"] = 2.0
         fightingAttack["ice"] = 2.0
@@ -200,7 +201,7 @@ class BattleSim(object):
         fightingAttack["ghost"] =0.0
         self.atkMult["fighting"] = fightingAttack
 
-        darkAttack = createBasicMap()
+        darkAttack = self.createBasicMap()
         darkAttack["ghost"] = 2.0
         darkAttack["psychic"] = 2.0
         darkAttack["dark"] = .5
@@ -215,7 +216,7 @@ class BattleSim(object):
 		#elif(p1AI=="nn"):
 		# 	self.p1 = PokeNet
         elif(p1AI == "basic"):
-            self.p1 = BasicAI
+            self.p1 = BasicAI()
         else:
             print("invalid ai for player 1")
             sys.exit(1)
@@ -225,7 +226,7 @@ class BattleSim(object):
 		#elif(p2AI == "nn"):
 			# self.p2 = PokeNet
         elif(p2AI == "basic"):
-            self.p2 = BasicAI
+            self.p2 = BasicAI()
         else:
             print("invalid ai for player 2")
             sys.exit(1)
@@ -234,7 +235,7 @@ class BattleSim(object):
         dataFile = open(fileLocation, 'r')
         line = next(dataFile)
         for line in dataFile:
-            lineparts = line.split(",")
+            lineparts = line.strip().split(",")
             name  = lineparts[0]
             self.validMon[name] = Mon(name, int(lineparts[1]), int(lineparts[2]), int(lineparts[3]),
 					int(lineparts[4]), lineparts[5], int(lineparts[6]), int(lineparts[7]),
@@ -257,6 +258,11 @@ class BattleSim(object):
         self.team2[1] = m22;
         self.team2[2] = m23;
 
+        if(self.battle()):
+            print("P1 wins!")
+        else:
+            print("P2 wins!")
+
     def isDefeated(self, team):
         # returns whether or not team has no usable Pokemon left
         return team[0].defeated and team[1].defeated & team[2].defeated
@@ -275,15 +281,15 @@ class BattleSim(object):
                 team[0].active = False;
                 team[1].active = True;
                 if not (team[0].defeated):
-                    println(team[0].name+"  is switching out!")
-                println("Go, "+team[1].name + "!")
+                    print(team[0].name+"  is switching out!")
+                print("Go, "+team[1].name + "!")
                 return
             elif not (team[2].defeated) :
                 team[0].active = False;
                 team[2].active = True;
                 if not (team[0].defeated) :
-                    println(team[0].name+"  is switching out!")
-                println("Go, "+team[2].name+"!")
+                    print(team[0].name+"  is switching out!")
+                print("Go, "+team[2].name+"!")
                 return
             else :
                 return
@@ -292,15 +298,15 @@ class BattleSim(object):
                 team[1].active = False
                 team[2].active = True
                 if not (team[1].defeated) :
-                    println(team[1].name + " is switching out!")
-                println("Go, "+team[2].name+"!");
+                    print(team[1].name + " is switching out!")
+                print("Go, "+team[2].name+"!");
                 return
             elif not (team[0].defeated):
                 team[1].active = False
                 team[0].active = True
                 if not (team[1].defeated) :
-                    println(team[1].name + " is switching out!")
-                println("Go, "+team[0].name+"!")
+                    print(team[1].name + " is switching out!")
+                print("Go, "+team[0].name+"!")
                 return
             else :
                 return
@@ -309,15 +315,15 @@ class BattleSim(object):
                 team[2].active = False
                 team[0].active = True
                 if not (team[2].defeated):
-                    println(team[2].name+"  is switching out!")
-                println("Go, "+team[0].name+"!")
+                    print(team[2].name+"  is switching out!")
+                print("Go, "+team[0].name+"!")
                 return
             elif not (team[1].defeated):
                 team[2].active = False
                 team[1].active = True
                 if not(team[2].defeated):
-                    println(team[2].name+"  is switching out!")
-                println("Go, "+team[1].name+"!")
+                    print(team[2].name+"  is switching out!")
+                print("Go, "+team[1].name+"!")
                 return
             else :
                 return
@@ -330,15 +336,15 @@ class BattleSim(object):
                 team[0].active = False
                 team[2].active = True
                 if not (team[0].defeated):
-                   println(team[0].name+"  is switching out!")
-                println("Go, "+team[2].name + "!")
+                   print(team[0].name+"  is switching out!")
+                print("Go, "+team[2].name + "!")
                 return
             elif not (team[1].defeated) :
                 team[0].active = False
                 team[1].active = True
                 if not (team[0].defeated) :
-                    println(team[0].name+"  is switching out!")
-                println("Go, "+team[1].name+"!")
+                    print(team[0].name+"  is switching out!")
+                print("Go, "+team[1].name+"!")
                 return
             else :
                 return
@@ -347,15 +353,15 @@ class BattleSim(object):
                 team[1].active = False
                 team[0].active = True
                 if not (team[1].defeated) :
-                    println(team[1].name + " is switching out!")
-                println("Go, "+team[0].name+"!");
+                    print(team[1].name + " is switching out!")
+                print("Go, "+team[0].name+"!");
                 return
             elif not (team[2].defeated):
                 team[1].active = False
                 team[2].active = True
                 if not (team[1].defeated) :
-                    println(team[1].name + " is switching out!")
-                println("Go, "+team[2].name+"!")
+                    print(team[1].name + " is switching out!")
+                print("Go, "+team[2].name+"!")
                 return
             else :
                 return
@@ -364,15 +370,15 @@ class BattleSim(object):
                 team[2].active = False
                 team[1].active = True
                 if not (team[2].defeated):
-                    println(team[2].name+"  is switching out!")
-                println("Go, "+team[1].name+"!")
+                    print(team[2].name+"  is switching out!")
+                print("Go, "+team[1].name+"!")
                 return
             elif not (team[0].defeated):
                 team[2].active = False
                 team[0].active = True
                 if not(team[2].defeated):
-                    println(team[2].name+"  is switching out!")
-                println("Go, "+team[0].name+"!")
+                    print(team[2].name+"  is switching out!")
+                print("Go, "+team[0].name+"!")
                 return
             else :
                 return
@@ -384,12 +390,16 @@ class BattleSim(object):
     def battle(self):
         turns = 0
         while not (self.isDefeated(self.team1)) and not (self.isDefeated(self.team2)):
-            println()
-            println("This is turn number "+(++turns))
-            active1 = active(self.team1)
-            active2 = active(self.team2)
-            move1 = self.p1.chooseMove(teamNum1, active2, atkMult)
-            move2 = self.p2.chooseMove(teamNum2, active1, atkMult)
+            print()
+            turns += 1
+            print("This is turn number "+str(turns))
+            active1 = self.active(self.team1)
+            active2 = self.active(self.team2)
+            print("P1's "+active1.name+" has "+str(int(active1.hp))+" HP left. ")
+            print("P2's "+active2.name+" has "+str(int(active2.hp))+" HP left. ")
+            print("")
+            move1 = self.p1.chooseMove(self.team1, active2, self.atkMult)
+            move2 = self.p2.chooseMove(self.team2, active1, self.atkMult)
             if (move1 == "switch1"):
 				#if player 1 is switching to first available
                 if (move2 == "switch1"):
@@ -415,11 +425,11 @@ class BattleSim(object):
                 elif(move2=="quick"):
 					#p2 is attacking quickly
                     self.switch1(self.team1)
-                    self.quick(active2, active(self.team1), self.team1)
+                    self.quick(active2, self.active(self.team1), self.team1)
                 else:
 					#p2 is attacking strongly
                     self.switch1(self.team1)
-                    self.strong(active2, active(self.team1), self.team1)
+                    self.strong(active2, self.active(self.team1), self.team1)
             elif (move1 == "switch2"):
 				#p1 switches to second available
                 if (move2 == "switch2"):
@@ -445,34 +455,34 @@ class BattleSim(object):
                 elif (move2 == "quick"):
 					#p2 is attacking quickly
                     self.switch2(self.team1)
-                    self.quick(active2, active(self.team1), self.team1)
+                    self.quick(active2, self.active(self.team1), self.team1)
                 else :
 					#p2 is attacking strongly
                     self.switch2(self.team1)
-                    self.strong(active2, active(self.team1), self.team1)
+                    self.strong(active2, self.active(self.team1), self.team1)
             elif(move1 == "quick"):
 				#p1 chooses quick
                 if (move2 == "switch1"):
 					#p2 switches to first available
                     self.switch1(self.team2)
-                    self.quick(active1, active(self.team2), self.team2)
+                    self.quick(active1, self.active(self.team2), self.team2)
                 elif(move2 == "switch2"):
 					#p2 switches to second available
                     self.switch2(self.team2)
-                    self.quick(active1, active(self.team2), self.team2)
+                    self.quick(active1, self.active(self.team2), self.team2)
                 else:
 					#p2 attacks
                     if (active1.speed >= active2.speed):
 						#p1 is faster
                         self.quick(active1, active2,self.team2)
-                        if ( ( self.isDefeated(teamNum2) ) or (active2.defeated) ):
+                        if ( ( self.isDefeated(self.team2) ) or (active2.defeated) ):
                             continue
                         if (move2 == "quick"):
 							#p2 uses a quick attack
-                            self.quick(active(self.team2), active1, self.team1)
+                            self.quick(self.active(self.team2), active1, self.team1)
                         else:
 							#p2 uses a strong attack
-                            self.strong(active(self.team2), active1, self.team1)
+                            self.strong(self.active(self.team2), active1, self.team1)
                     else:
 						#p2 is faster
                         if(move2 == "quick"):
@@ -491,24 +501,24 @@ class BattleSim(object):
                 if (move2 == "switch1"):
 					#p2 switches to first available
                     self.switch1(self.team2)
-                    self.strong(active1, active(self.team2), self.team2)
+                    self.strong(active1, self.active(self.team2), self.team2)
                 elif (move2 == "switch2"):
 					#p2 switches to second available
                     self.switch2(self.team2)
-                    self.strong(active1, active(self.team2), self.team2)
+                    self.strong(active1, self.active(self.team2), self.team2)
                 else :
 					#p2 attacks
                     if (active1.speed >= active2.speed):
 						#p1 is faster
                         self.strong(active1, active2, self.team2)
-                        if ((self.isDefeated(teamNum2)) or (active2.defeated) ):
+                        if ((self.isDefeated(self.team2)) or (active2.defeated) ):
                             continue
                         if(move2 == "quick"):
 							#p2 uses a quick attack
-                            self.quick(active(self.team2), active1, self.team1)
+                            self.quick(self.active(self.team2), active1, self.team1)
                         else:
 							#p2 uses a strong attack
-                            self.strong(active(self.team2), active1, self.team1)
+                            self.strong(self.active(self.team2), active1, self.team1)
                     else:
 						#p2 is faster
                         if (move2 == "quick"):
@@ -522,63 +532,65 @@ class BattleSim(object):
                         if(active1.active):
 							#if active1 wasn't knocked out
                             self.strong(active1, active2, self.team2)
-        return self.isDefeated(teamNum2)
+        print("")
+        return self.isDefeated(self.team2)
 
     def quick(self, attacker, target, targetTeam): #returns true if target faints
 
-        println(attacker.name+" used "+attacker.quickMoveName+ " on "+target.name+"!")
+        print(attacker.name+" used "+attacker.quickMoveName+ " on "+target.name+"!")
         accCheck = random.randint(0,100) #accuracy needs to be higher than accCheck to land
         if (attacker.quickMoveAcc <= accCheck):
-            println("But it missed!")
+            print("But it missed!")
             return False
         damage = attacker.attack + attacker.quickMovePower - target.defense
         multiplier = 1
         multiplier = multiplier * self.atkMult.get(attacker.quickMoveType).get(target.type1)
         multiplier = multiplier * self.atkMult.get(attacker.quickMoveType).get(target.type2)
+
         if(multiplier > 1):
-            println("It's super effective!")
+            print("It's super effective!")
         elif ( multiplier == 0 ):
-            println("It didn't have any effect...")
+            print("It didn't have any effect...")
             return False
         elif(multiplier < 1 ):
-            println("It's  not very effective...")
+            print("It's  not very effective...")
         damage = damage * multiplier
         target.hp = target.hp - damage
         if(target.hp < 1):
             target.defeated = True
-            println(target.name + " fainted!")
-            if(not isDefeated(targetTeam)):
+            print(target.name + " fainted!")
+            if(not self.isDefeated(targetTeam)):
                 self.switch1(targetTeam)
             return True
         return False
 
     def strong(self, attacker, target, targetTeam): #returns true if target faints
 
-        println(attacker.name+" used "+attacker.strongMoveName+ " on "+target.name+"!")
+        print(attacker.name+" used "+attacker.strongMoveName+ " on "+target.name+"!")
         accCheck = random.randint(0,100) #accuracy needs to be higher than accCheck to land
         if (attacker.strongMoveAcc <= accCheck):
-            println("But it missed!")
+            print("But it missed!")
             return False
         damage = attacker.attack + attacker.strongMovePower - target.defense
         multiplier = 1
         multiplier = multiplier * self.atkMult.get(attacker.strongMoveType).get(target.type1)
         multiplier = multiplier * self.atkMult.get(attacker.strongMoveType).get(target.type2)
         if(multiplier > 1):
-            println("It's super effective!")
+            print("It's super effective!")
         elif ( multiplier == 0 ):
-            println("It didn't have any effect...")
+            print("It didn't have any effect...")
             return False
         elif(multiplier < 1 ):
-            println("It's  not very effective...")
+            print("It's  not very effective...")
         damage = damage * multiplier
         target.hp = target.hp - damage
         if(target.hp < 1):
             target.defeated = True
-            println(target.name + " fainted!")
-            if(not isDefeated(targetTeam)):
+            print(target.name + " fainted!")
+            if(not self.isDefeated(targetTeam)):
                 self.switch1(targetTeam)
             return True
         return False
 
-if __init__ == "_main_":
+if __name__ == "__main__":
     main()
