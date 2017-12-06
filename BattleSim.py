@@ -555,6 +555,8 @@ class BattleSim(object):
         elif(multiplier < 1 ):
             print("It's  not very effective...")
         damage = damage * multiplier
+        if(damage < 1):
+            damage = 1
         target.hp = target.hp - damage
         if(target.hp < 1):
             target.defeated = True
@@ -572,6 +574,8 @@ class BattleSim(object):
             print("But it missed!")
             return False
         damage = attacker.attack + attacker.strongMovePower - target.defense
+        if(damage < 1):
+            damage = 1
         multiplier = 1
         multiplier = multiplier * self.atkMult.get(attacker.strongMoveType).get(target.type1)
         multiplier = multiplier * self.atkMult.get(attacker.strongMoveType).get(target.type2)
