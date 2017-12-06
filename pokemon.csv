@@ -4,13 +4,15 @@ Ninetails,310,70,45,70,ember,30,95,fire,heat wave,110,55,fire,fire,none
 Banette,300,85,80,55,shadow sneak,25,100,ghost,shadow claw,80,75,ghost,ghost,none
 Onix,300,100,90,20,rock throw,35,90,rock,earthquake,120,45,ground,rock,ground
 Piplup,200,60,75,85,peck,30,100,flying,bubblebeam,85,75,water,water,none
-Dragonair,290,110,90,30,slam,30,85,normal,hyperbeam,100,45,normal,dragon,none
+Dragonite,290,110,90,30,slam,30,85,normal,hyperbeam,100,45,normal,dragon,flying
 Porygon,280,75,90,60,tackle,25,100,normal,tri attack,90,75,normal,normal,none
 Zapdos,320,90,65,75,peck,25,100,flying,zap cannon,100,70,electric,electric,flying
+Articuno,320,65,75,90,peck,25,100,flying,blizzard,100,70,ice,ice,flying
+Moltres,320,75,90,65,peck,25,100,flying,flamethrower,100,70,fire,fire,flying
 Charizard,290,90,90,30,wing attack,30,95,flying,inferno,80,80,fire,fire,flying
 Blastoise,300,85,95,30,rapid spin,25,100,normal,hydro pump,90,75,water,water,none
 Venusaur,285,95,95,50,vine whip,30,95,grass,solar beam,100,65,grass,grass,poison
-Snorlax,350,75,100,20,lick,10,100,ghost,giga impact,100,85,normal,normal,none
+Snorlax,350,75,100,20,lick,10,100,ghost,giga impact,100,75,normal,normal,none
 Diglett,230,70,85,45,scratch,25,100,normal,earthquake,120,45,ground,ground,none
 Gengar,270,90,60,95,shadow punch,30,95,ghost,shadow ball,110,55,ghost,ghost,poison
 Gyarados,270,95,95,50,twister,25,100,dragon,hurricane,110,55,flying,water,flying
@@ -27,4 +29,6 @@ Gardevoir,280,80,55,75,confusion,30,90,psychic,dazzling gleam,100,65,fairy,psych
 Mimikyu,300,90,60,30,shadow sneak,25,100,ghost,play rough,95,70,fairy,ghost,fairy
 Heracross,280,95,50,60,arm thrust,20,90,fighting,megahorn,110,65,bug,bug,fighting
 Beedrill,265,90,30,90,poison sting,20,100,poison,x-scissor,75,70,bug,bug,poison
-Alakazam,275,85,45,80,confusion,20,90,psychic,psychic,90,85,psychic,psychic,none
+Alakazam,275,85,45,90,confusion,20,90,psychic,psychic,90,85,psychic,psychic,none
+Hydreigon,290,100,50,75,bite,25,100,dark,draco meteor,125,55,dragon,dark,dragon
+Scrafty,280,85,90,45,bite,25,100,dark,brick break,90,80,fighting,dark,fighting
