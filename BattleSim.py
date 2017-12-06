@@ -8,7 +8,7 @@ from mon import Mon
 import random
 
 def main():
-    battle = BattleSim("user","basic",input("Pick your first Pokemon: "),input("Pick your second Pokemon: "),input("Pick your third Pokemon: "),"Scrafty","Onix","Gardevoir")
+    battle = BattleSim(input("Who controls P1? Choose 'user' or 'basic' : "),input("Who controls P2? Choose 'user' or 'basic' : "),input("Pick P1's first Pokemon: "),input("Pick P1's second Pokemon: "),input("Pick P1's third Pokemon: "),input("Pick P2's first Pokemon: "),input("Pick P2's second Pokemon: "),input("Pick P2's third Pokemon: "))
 
 class BattleSim(object):
 
