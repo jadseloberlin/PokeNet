@@ -8,7 +8,7 @@ from mon import Mon
 import random
 
 def main():
-    battle = BattleSim("basic","basic","Pikachu","Porygon","Piplup","Scrafty","Onix","Gardevoir")
+    battle = BattleSim("user","basic",input("Pick your first Pokemon: "),input("Pick your second Pokemon: "),input("Pick your third Pokemon: "),"Scrafty","Onix","Gardevoir")
 
 class BattleSim(object):
 
@@ -212,7 +212,7 @@ class BattleSim(object):
 
 		#load AI
         if(p1AI=="user") :
-	           self.p1 = UserControl
+	           self.p1 = UserControl()
 		#elif(p1AI=="nn"):
 		# 	self.p1 = PokeNet
         elif(p1AI == "basic"):
@@ -222,7 +222,7 @@ class BattleSim(object):
             sys.exit(1)
 
         if(p2AI=="user"):
-            self.p2 = UserControl
+            self.p2 = UserControl()
 		#elif(p2AI == "nn"):
 			# self.p2 = PokeNet
         elif(p2AI == "basic"):
