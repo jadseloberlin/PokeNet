@@ -8,6 +8,10 @@ from mon import Mon
 import random
 
 class BattleSim(object):
+
+    def main():
+        battle = BattleSim()
+
     def createBasicMap(self):
         rtn = {}
         for t in self.types:
@@ -30,7 +34,7 @@ class BattleSim(object):
         self.p1 = None
         self.p2 = None
         # populate type matchups
-		fireAttack = createBasicMap()
+        fireAttack = createBasicMap()
 		fireAttack["fire"] = .5
 		fireAttack["water"] = .5;
 		fireAttack["grass"] = 2.0
@@ -575,3 +579,6 @@ class BattleSim(object):
                 self.switch1(targetTeam)
             return True
         return False
+
+if __init__ == "_main_":
+    main()
