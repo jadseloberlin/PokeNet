@@ -158,16 +158,22 @@ def trainTensorFlow(complete, maxSteps, numActions):
     maxSteps = iterNum
     while steps < maxSteps:
         steps +=1
-        st = None
-        et = (s, at, rt, st1)
+        # st,at,rt,st1 = call method
+        et = (st, at, rt, st1)
         D.append(et)
 
-        while len(D) > 0:
+        shuffleD = random.shuffle(D)
+        T = []
+
+        for i in range(0, math.ceil(len(D)/2)):
+            T.append(D[i])
+
+        while len(T) > 0:
             #if running slow change while loop
-            et = D.pop()
-            nQ = sess.run(predict, feed_dict = {state:st1})
+            et = T.pop()
+            nQ = sess.run(predict, feed_dict = {state:et.st1})
             i = labelList.index(et.at)
-            m = [0] *numActions
+            m = [0] * numActions
             m[i] = 1
             sess.run(trainer, feed_dict = {mask: m, reward:r, state:st, nextQ: nQ})
             if steps % 10 == 0:
