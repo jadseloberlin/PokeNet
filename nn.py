@@ -22,8 +22,8 @@ def main():
     continuous = {}
     attributeValuesDict = {}
     attributeValuesDictList = {}
-    labelList = [] hardcode!
-    labelSet = set()  hardcode!
+    labelList = [] #hardcode!
+    labelSet = set()  #hardcode!
 
     #open file and process data
     path = '*.csv' #note C:
@@ -100,10 +100,10 @@ def buildTensorFlow(numAttributes, numLabels, numNeurons, learningRate, iterNum,
     # oldPredict  = tf.placeholder(tf.float32, shape = [numLabels])
     # mask = tf.placeholder(tf.float32, shape = [1])
 
-     state = tf.placeholder(tf.float32, shape = [numLabels])
-     nextQ = tf.placeholder(tf.float32, shape = [numActions])
-     r = tf.placeholder(tf.float32, shape = [numActions])
-     mask = tf.placeholder(tf.float32, shape = [1])
+    state = tf.placeholder(tf.float32, shape = [numLabels])
+    nextQ = tf.placeholder(tf.float32, shape = [numActions])
+    r = tf.placeholder(tf.float32, shape = [numActions])
+    mask = tf.placeholder(tf.float32, shape = [1])
 
     #create hidden layer
     W_hidden = tf.Variable(tf.truncated_normal([numAttributes, numNeurons], stddev = 0.1))
@@ -165,11 +165,11 @@ def trainTensorFlow(complete, maxSteps, numActions):
         while len(D) > 0:
             #if running slow change while loop
             et = D.pop()
-            nQ = sess.run(predict, feed_dict = {state:st1])
+            nQ = sess.run(predict, feed_dict = {state:st1})
             i = labelList.index(et.at)
             m = [0] *numActions
             m[i] = 1
-            sess.run(trainer, feed_dict{mask: m, reward:r, state:st, nextQ: nQ})
+            sess.run(trainer, feed_dict = {mask: m, reward:r, state:st, nextQ: nQ})
             if steps % 10 == 0:
                 saver.save(sess, 'pokemon_model', global_step=steps)
 
@@ -184,7 +184,7 @@ def testTensorFlow(complete):
     predict = graph.get_tensor_by_name("predict:0")
     oldPredict = graph.get_tensor_by_name("oldPredict:0")
     action = graph.get_tensor_by_name("action:0")
-    trainer´ = graph.get_tensor_by_name("trainer:0")
+    trainer = graph.get_tensor_by_name("trainer:0")
     r = graph.get_tensor_by_name("r:0")
     mask = graph.get_tensor_by_name("mask:0")
 
@@ -197,14 +197,14 @@ def processInstance(instance, attributeValuesDictList, labelList, continuous, at
     instance.attributeListProcess(attributeValuesDictList, continuous, attList)
 
 def update():
-    p = sess.run(predict, feed_dict{x: et.st})
+    p = sess.run(predict, feed_dict = {x: et.st})
     qsa= [0] * len(p) #create matrix
     qsa[et.at] = p[et.at] #Q(st, at)
 
     qsa2 = [0] * len(p) #create matrix
     mask[et.at] = 1
 
-    p = sess.run(predict, feed_dict{x: et.st+1})
+    p = sess.run(predict, feed_dict = {x: et.st+1})
     maxP = max(p)
 
 

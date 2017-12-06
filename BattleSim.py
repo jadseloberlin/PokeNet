@@ -35,9 +35,9 @@ class BattleSim(object):
         self.p2 = None
         # populate type matchups
         fireAttack = createBasicMap()
-		fireAttack["fire"] = .5
-		fireAttack["water"] = .5;
-		fireAttack["grass"] = 2.0
+        fireAttack["fire"] = .5
+        fireAttack["water"] = .5;
+        fireAttack["grass"] = 2.0
 		fireAttack["bug"] = 2.0
 		fireAttack["ice"] = 2.0
 		fireAttack["rock"] = .5
