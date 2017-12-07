@@ -5,9 +5,9 @@ class UserControl(object):
         self.nothing = 0
 
     def chooseMove(self, team, activeOpp, typeMatchups):
-        move = input("Please type in move from move list: switch1, switch2, strong, quick :   "  )
-        while((not (move == "quick") ) and (not (move == "strong")) and (not (move == "switch1")) and (not (move =="switch2")) ):
-            move = input("Plese choose a valid move: switch1, switch2, strong, quick :  ")
+        move = input("Please type in move from move list: switch1, switch2, strong, quick, exit:   "  )
+        while((not (move == "quick") ) and (not (move == "strong")) and (not (move == "switch1")) and (not (move =="switch2")) and (not (move == "exit")) ):
+            move = input("Plese choose a valid move: switch1, switch2, strong, quick, exit :  ")
         return move
 
 	# def chooseMove(ArrayList<Mon> team, Mon active, ArrayList<Mon> oppTeam, Mon activeOpp,

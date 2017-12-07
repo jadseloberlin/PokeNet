@@ -6,6 +6,8 @@ from userControl import UserControl
 from basicAI import BasicAI
 from mon import Mon
 import random
+import sys
+import numpy
 
 def main():
     battle = BattleSim(input("Who controls P1? Choose 'user' or 'basic' : "),input("Who controls P2? Choose 'user' or 'basic' : "),input("Pick P1's first Pokemon: "),input("Pick P1's second Pokemon: "),input("Pick P1's third Pokemon: "),input("Pick P2's first Pokemon: "),input("Pick P2's second Pokemon: "),input("Pick P2's third Pokemon: "))
@@ -400,6 +402,9 @@ class BattleSim(object):
             print("")
             move1 = self.p1.chooseMove(self.team1, active2, self.atkMult)
             move2 = self.p2.chooseMove(self.team2, active1, self.atkMult)
+            if(move1 == "exit" or move2 == "exit"):
+                print("Thank you!")
+                sys.exit(0)
             if (move1 == "switch1"):
 				#if player 1 is switching to first available
                 if (move2 == "switch1"):
@@ -542,7 +547,7 @@ class BattleSim(object):
         if (attacker.quickMoveAcc <= accCheck):
             print("But it missed!")
             return False
-        damage = attacker.attack + attacker.quickMovePower - target.defense
+        damage = attacker.quickMovePower + 2/3 * (attacker.attack - target.defense)
         multiplier = 1
         multiplier = multiplier * self.atkMult.get(attacker.quickMoveType).get(target.type1)
         multiplier = multiplier * self.atkMult.get(attacker.quickMoveType).get(target.type2)
@@ -555,8 +560,8 @@ class BattleSim(object):
         elif(multiplier < 1 ):
             print("It's  not very effective...")
         damage = damage * multiplier
-        if(damage < 1):
-            damage = 1
+        if(damage < 5):
+            damage = 5
         target.hp = target.hp - damage
         if(target.hp < 1):
             target.defeated = True
@@ -573,9 +578,9 @@ class BattleSim(object):
         if (attacker.strongMoveAcc <= accCheck):
             print("But it missed!")
             return False
-        damage = attacker.attack + attacker.strongMovePower - target.defense
-        if(damage < 1):
-            damage = 1
+        damage = attacker.strongMovePower + 2/3 (attacker.attack - target.defense)
+        if(damage < 5):
+            damage = 5
         multiplier = 1
         multiplier = multiplier * self.atkMult.get(attacker.strongMoveType).get(target.type1)
         multiplier = multiplier * self.atkMult.get(attacker.strongMoveType).get(target.type2)
@@ -595,6 +600,102 @@ class BattleSim(object):
                 self.switch1(targetTeam)
             return True
         return False
+
+    def reward(self, action, state):
+        damage = 0
+        active = 0
+        rtn = 0
+        acc = 100 #if the action is a switch, accuracy is irrelevant
+
+        if(state.user1Active):
+            active = 1
+        elif(state.user2Active):
+            active = 2
+        elif(state.user3Active):
+            active = 3
+        else:
+            if( (not(state.user1HP == 0)) or (not (state.user2HP == 0) or (not (state.user3HP==0))):
+                print("we don't know who's active")
+                sys.exit(1)
+            return None
+        if(action == "quick"):
+            if(active == 1):
+                damage += state.user1QDmg + 2/3 * (state.user1Atk - state.oppDef)
+                acc = state.user1QAcc
+            elif (active == 2):
+                damage += state.user2QDmg + 2/3 * (state.user2Atk - state.oppDef)
+                acc = state.user2QAcc
+            elif (active ==3):
+                damage += state.user3QDmg + 2/3 * (state.user3Atk - state.oppDef)
+                acc = state.user3QAcc
+        elif(action == "strong"):
+            if(active == 1):
+                damage += state.user1SDmg + 2/3 * (state.user1Atk - state.oppDef)
+                acc = state.user1SAcc
+            elif (active == 2):
+                damage += state.user2SDmg + 2/3 * (state.user2Atk - state.oppDef)
+                acc = state.user2SAcc
+            elif (active ==3):
+                damage += state.user3SDmg + 2/3 * (state.user3Atk - state.oppDef)
+                acc = state.user3SAcc
+        rtn += math.log10(damage)
+        acc = acc / 100
+        rtn = rtn * acc
+
+        if(state.oppHP - (damage * acc) < 1): #fainting bonus
+            rtn += 2.5
+
+        quickMap = self.atkMulk[state.oppQType]
+        strongMap = self.atkMult[state.oppSType]
+        quick = 1 #defending muliplier
+        strong = 1 #defending multiplier
+        quickAtk = 1 # attacking multiplier
+        strongAtk = 1 # attacking multiplier
+
+        if(active == 1 ):
+            quick = 1 / (quickMap[state.user1Type1] * quickMap[state.user1Type2])
+            strong = 1 / ( strongMap[state.user1Type1] * strongMap[state.user1Type2] )
+            quickAtkMap = self.atkMulk[state.user1QType]
+            strongAtkMap = self.atkMult[state.user1SType]
+            quickAtk = quickAtkMap[state.oppType1] * quickAtkMap[stte.oppType2]
+            strongAtk = strongAtkMap[state.oppType1] * strongAtkMap[state.oppType2]
+        elif (active == 2):
+            quick = 1 / (quickMap[state.user2Type1] * quickMap[state.user2Type2])
+            strong = 1 / (strongMap[state.user2Type1] * strongMap[state.user2Type2])
+            quickAtkMap = self.atkMulk[state.user2QType]
+            strongAtkMap = self.atkMult[state.user2SType]
+            quickAtk = quickAtkMap[state.oppType1] * quickAtkMap[stte.oppType2]
+            strongAtk = strongAtkMap[state.oppType1] * strongAtkMap[state.oppType2]
+        elif (active == 3):
+            quick = 1 / (quickMap[state.user3Type1] * quickMap[state.user3Type2] )
+            strong = 1 / (strongMap[state.user3Type1] * strongMap[state.user3Type2] )
+            quickAtkMap = self.atkMulk[state.user3QType]
+            strongAtkMap = self.atkMult[state.user3SType]
+            quickAtk = quickAtkMap[state.oppType1] * quickAtkMap[stte.oppType2]
+            strongAtk = strongAtkMap[state.oppType1] * strongAtkMap[state.oppType2]
+
+        a = [math.log(quick,2), math.log(strong,2), math.log(quickAtk,2), math.log(strongAtk,2)]
+        avgMult = numpy.mean(a)
+        rtn += avgMult
+
+        return rtn
+
+    def stateAction(self, state, action): # returns state, action, reward, next state
+        newState = deepcopy(state)
+        if(action == "quick"):
+            print()
+        elif(action == "strong"):
+            print()
+        elif(action == "switch1"):
+            print()
+        elif(action == "switch2"):
+            print()
+
+        reward = reward(action, state)
+        return state, action, reward, newState
+
+
+
 
 if __name__ == "__main__":
     main()
