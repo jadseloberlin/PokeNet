@@ -578,7 +578,7 @@ class BattleSim(object):
         if (attacker.strongMoveAcc <= accCheck):
             print("But it missed!")
             return False
-        damage = attacker.strongMovePower + 2/3 (attacker.attack - target.defense)
+        damage = attacker.strongMovePower + 2/3* (attacker.attack - target.defense)
         if(damage < 5):
             damage = 5
         multiplier = 1
