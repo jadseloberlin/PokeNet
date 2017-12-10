@@ -215,6 +215,106 @@ def update():
 
 
 
+# code for interacting w simulator
+
+def reward(self, action, state):
+    damage = 0
+    active = 0
+    rtn = 0
+    acc = 100 #if the action is a switch, accuracy is irrelevant
+
+    if(state.user1Active):
+        active = 1
+    elif(state.user2Active):
+        active = 2
+    elif(state.user3Active):
+        active = 3
+    else:
+        if( (not(state.user1HP == 0)) or (not (state.user2HP == 0)) or (not (state.user3HP==0))):
+            print("we don't know who's active")
+            sys.exit(1)
+        return None
+    if(action == "quick"):
+        if(active == 1):
+            damage += state.user1QDmg + 2/3 * (state.user1Atk - state.oppDef)
+            acc = state.user1QAcc
+        elif (active == 2):
+            damage += state.user2QDmg + 2/3 * (state.user2Atk - state.oppDef)
+            acc = state.user2QAcc
+        elif (active ==3):
+            damage += state.user3QDmg + 2/3 * (state.user3Atk - state.oppDef)
+            acc = state.user3QAcc
+    elif(action == "strong"):
+        if(active == 1):
+            damage += state.user1SDmg + 2/3 * (state.user1Atk - state.oppDef)
+            acc = state.user1SAcc
+        elif (active == 2):
+            damage += state.user2SDmg + 2/3 * (state.user2Atk - state.oppDef)
+            acc = state.user2SAcc
+        elif (active ==3):
+            damage += state.user3SDmg + 2/3 * (state.user3Atk - state.oppDef)
+            acc = state.user3SAcc
+    rtn += math.log10(damage)
+    acc = acc / 100
+    rtn = rtn * acc
+
+    if(state.oppHP - (damage * acc) < 1): #fainting bonus
+        rtn += 2.5
+
+    quickMap = self.atkMulk[state.oppQType]
+    strongMap = self.atkMult[state.oppSType]
+    quick = 1 #defending muliplier
+    strong = 1 #defending multiplier
+    quickAtk = 1 # attacking multiplier
+    strongAtk = 1 # attacking multiplier
+
+    if(active == 1 ):
+        quick = 1 / (quickMap[state.user1Type1] * quickMap[state.user1Type2])
+        strong = 1 / ( strongMap[state.user1Type1] * strongMap[state.user1Type2] )
+        quickAtkMap = self.atkMulk[state.user1QType]
+        strongAtkMap = self.atkMult[state.user1SType]
+        quickAtk = quickAtkMap[state.oppType1] * quickAtkMap[stte.oppType2]
+        strongAtk = strongAtkMap[state.oppType1] * strongAtkMap[state.oppType2]
+    elif (active == 2):
+        quick = 1 / (quickMap[state.user2Type1] * quickMap[state.user2Type2])
+        strong = 1 / (strongMap[state.user2Type1] * strongMap[state.user2Type2])
+        quickAtkMap = self.atkMulk[state.user2QType]
+        strongAtkMap = self.atkMult[state.user2SType]
+        quickAtk = quickAtkMap[state.oppType1] * quickAtkMap[stte.oppType2]
+        strongAtk = strongAtkMap[state.oppType1] * strongAtkMap[state.oppType2]
+    elif (active == 3):
+        quick = 1 / (quickMap[state.user3Type1] * quickMap[state.user3Type2] )
+        strong = 1 / (strongMap[state.user3Type1] * strongMap[state.user3Type2] )
+        quickAtkMap = self.atkMulk[state.user3QType]
+        strongAtkMap = self.atkMult[state.user3SType]
+        quickAtk = quickAtkMap[state.oppType1] * quickAtkMap[stte.oppType2]
+        strongAtk = strongAtkMap[state.oppType1] * strongAtkMap[state.oppType2]
+
+    a = [math.log(quick,2), math.log(strong,2), math.log(quickAtk,2), math.log(strongAtk,2)]
+    avgMult = numpy.mean(a)
+    rtn += avgMult
+
+    rtn = rtn - math.log10(state.turns)
+    return rtn
+
+def stateAction(self, state, action): # returns state, action, reward, next state
+    newState = deepcopy(state)
+    newState.turns = state.turns + 1
+    if(action == "quick"):
+        print()
+    elif(action == "strong"):
+        print()
+    elif(action == "switch1"):
+        print()
+    elif(action == "switch2"):
+        print()
+
+    reward = reward(action, state)
+    return state, action, reward, newState
+
+
+
+
 
 if __name__ == '__main__':
     main()

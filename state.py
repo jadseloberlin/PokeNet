@@ -1,8 +1,11 @@
 class State(object):
-    def __init__(self, user1Name, user1Active, user1HP, user1Atk, user1Def, user1Spe, user1Type1, user1Type2, user1QType, user1QDmg, user1QAcc, user1SType, user1SDmg, user1SAcc,
+    def __init__(self, turns, user1Name, user1Active, user1HP, user1Atk, user1Def, user1Spe, user1Type1, user1Type2, user1QType, user1QDmg, user1QAcc, user1SType, user1SDmg, user1SAcc,
     user2Name, user2Active, user2HP, user2Atk, user2Def, user2Spe, user2Type2, user2Type2, user2QType, user2QDmg, user2QAcc, user2SType, user2SDmg, user2SAcc,
     user3Name, user3Active, user3HP, user3Atk, user3Def, user3Spe, user3Type3, user3Type2, user3QType, user3QDmg, user3QAcc, user3SType, user3SDmg, user3SAcc,
     oppName, oppHP, oppAtk, oppDef, oppSpe, oppType1, oppType2, oppQType, oppQDmg, oppQAcc, oppSType, oppSDmg, oppSAcc):
+
+        self.turns = turns
+
         self.user1Name = user1Name
         self.user1Active = user1Active
         self.user1HP = user1HP
@@ -15,8 +18,8 @@ class State(object):
         self.user1QDmg = user1QDmg
         self.user1QAcc = user1QAcc
         self.user1SType = user1SType
-        self.user1SDmg = self.user1SDmg
-        self.user1SAcc = self.user1SAcc
+        self.user1SDmg = user1SDmg
+        self.user1SAcc = user1SAcc
 
         self.user2Name = user2Name
         self.user2Active = user2Active
@@ -30,8 +33,8 @@ class State(object):
         self.user2QDmg = user2QDmg
         self.user2QAcc = user2QAcc
         self.user2SType = user2SType
-        self.user2SDmg = self.user2SDmg
-        self.user2SAcc = self.user2SAcc
+        self.user2SDmg = user2SDmg
+        self.user2SAcc = user2SAcc
 
         self.user3Name = user3Name
         self.user3Active = user3Active
@@ -45,8 +48,8 @@ class State(object):
         self.user3QDmg = user3QDmg
         self.user3QAcc = user3QAcc
         self.user3SType = user3SType
-        self.user3SDmg = self.user3SDmg
-        self.user3SAcc = self.user3SAcc
+        self.user3SDmg = user3SDmg
+        self.user3SAcc = user3SAcc
 
         self.oppName = oppName
         self.oppActive = oppActive
@@ -60,5 +63,7 @@ class State(object):
         self.oppQDmg = oppQDmg
         self.oppQAcc = oppQAcc
         self.oppSType = oppSType
-        self.oppSDmg = self.oppSDmg
-        self.oppSAcc = self.oppSAcc
+        self.oppSDmg = oppSDmg
+        self.oppSAcc = oppSAcc
+
+        #do we need the full opponent team ?
