@@ -3,318 +3,431 @@ import math
 import random
 import sys
 import tensorflow as tf
+from state import State
 
-def main():
-    # fileLocation = sys.argv[1]
-    # numNeurons = int(sys.argv[2])
-    # learningRate = float(sys.argv[3])
-    # iterNum = int(sys.argv[4])
-    # trainingSetPercent = float(sys.argv[5])
-    numNeurons = 50
-    learningRate = .07
-    iterNum = 750;
-    # trainingSetPercent = float(sys.argv[5])
-    seed = 1334
-    completeList = []
+# def main():
+#     # fileLocation = sys.argv[1]
+#     # numNeurons = int(sys.argv[2])
+#     # learningRate = float(sys.argv[3])
+#     # iterNum = int(sys.argv[4])
+#     # trainingSetPercent = float(sys.argv[5])
+#     numNeurons = 50
+#     learningRate = .07
+#     iterNum = 750;
+#     # trainingSetPercent = float(sys.argv[5])
+#     seed = 1334
+#     completeList = []
+#
+#
+#     attributeList = []
+#     continuous = {}
+#     attributeValuesDict = {}
+#     attributeValuesDictList = {}
+#     labelList = [] #hardcode!
+#     labelSet = set()  #hardcode!
+#
+#     #open file and process data
+#     path = '*.csv' #note C:
+#     files = glob.glob(path)
+#     # dataFile = open(fileLocation, 'r')
+#     line = next(dataFile)
+#     attributeList = line.split(",")
+#     for i in range(1,len(attributeList)):
+#         attribute = attributeList[i]
+#         continuous[attribute] = False
+#         attributeValuesDict[attribute] = set()
+#     for line in dataFile:
+#         dic = {}
+#         arr = line.split(",")
+#         if arr[0] not in labelSet:
+#             labelSet.add(arr[0])
+#         for i in range(1,len(attributeList)):
+#             att = attributeList[i]
+#             dic[att] = arr[i]
+#             try:
+#                 f = float(arr[i])
+#                 continuous[att] = True
+#             except:
+#                 #find all posssible types of certain attribute
+#                 atSet = attributeValuesDict[att]
+#                 if arr[i] not in atSet:
+#                     atSet.add(arr[i])
+#                     attributeValuesDict[att] = atSet
+#         newInst = Instance(dic, arr[0])
+#         completeList.append(newInst)
+#
+#     del attributeList[0]
+#
+#
+#
+#     tempList = attributeValuesDict.items()
+#     for tup in tempList:
+#         attribute = tup[0]
+#         s = tup[1]
+#         tempList2 = []
+#         for value in s:
+#             tempList2.append(value)
+#         attributeValuesDictList[attribute] = tempList2
+#
+#     for instance in completeList:
+#         processInstance(instance, attributeValuesDictList, labelList, continuous, attributeList)
+#
+#     #shuffle list
+#     random.seed(seed)
+#     shuffledCompleteList = list(completeList)
+#     random.shuffle(shuffledCompleteList)
+#
+#
+#     labelNum = len(labelList)
+#
+#     listAtt = []
+#     listLab = []
+#     for instance in completeList:
+#         listAtt.append(instance.attributeList)
+#         listLab.append(instance.labelList)
+#
+#     tupleComplete = (listAtt, listLab)
+#
+#     instance = completeList[0]
+#     numAtt = len(instance.attributeList)
+#
+#     buildTensorFlow(numAtt, labelNum, 50, .07, iterNum, labelList, 1334)
+#     trainTensorFlow(tupleComplete, 10)
+class NN(object):
 
+    def __init__(self):
+        self.numNeurons = 50
+        self.learningRate = .07
+        self.seed = 1334
+        self.iterNum = 750
+        self.numAttributes = 56
+        self.numLabels = 4
+        self.labelList = ["quick", "strong", "switch1", "switch2"]
 
-    attributeList = []
-    continuous = {}
-    attributeValuesDict = {}
-    attributeValuesDictList = {}
-    labelList = [] #hardcode!
-    labelSet = set()  #hardcode!
+    def buildTensorFlow(self):
+        # state = tf.placeholder(tf.float32, shape = [numLabels])
+        # r = tf.placeholder(tf.float32, shape = [bumActions])
+        # predict = tf.placeholder(tf.float32, shape = [numLabels])
+        # oldPredict  = tf.placeholder(tf.float32, shape = [numLabels])
+        # mask = tf.placeholder(tf.float32, shape = [1])
 
-    #open file and process data
-    path = '*.csv' #note C:
-    files = glob.glob(path)
-    # dataFile = open(fileLocation, 'r')
-    line = next(dataFile)
-    attributeList = line.split(",")
-    for i in range(1,len(attributeList)):
-        attribute = attributeList[i]
-        continuous[attribute] = False
-        attributeValuesDict[attribute] = set()
-    for line in dataFile:
-        dic = {}
-        arr = line.split(",")
-        if arr[0] not in labelSet:
-            labelSet.add(arr[0])
-        for i in range(1,len(attributeList)):
-            att = attributeList[i]
-            dic[att] = arr[i]
-            try:
-                f = float(arr[i])
-                continuous[att] = True
-            except:
-                #find all posssible types of certain attribute
-                atSet = attributeValuesDict[att]
-                if arr[i] not in atSet:
-                    atSet.add(arr[i])
-                    attributeValuesDict[att] = atSet
-        newInst = Instance(dic, arr[0])
-        completeList.append(newInst)
+        state = tf.placeholder(tf.float32, shape = [self.numLabels])
+        nextQ = tf.placeholder(tf.float32, shape = [self.numLabels])
+        r = tf.placeholder(tf.float32, shape = [self.numLabels])
+        mask = tf.placeholder(tf.float32, shape = [1])
 
-    del attributeList[0]
+        #create hidden layer
+        W_hidden = tf.Variable(tf.truncated_normal([self.numAttributes, self.numNeurons], stddev = 0.1))
+        b_hidden = tf.Variable(tf.constant(0.1, shape = [self.numNeurons]))
+        net_hidden = tf.matmul(state, W_hidden) + b_hidden
+        out_hidden = tf.sigmoid(net_hidden)
 
+        #create output layer
+        W_output = tf.Variable(tf.truncated_normal([self.numNeurons, self.numLabels], stddev = 0.1))
+        b_output = tf.Variable(tf.constant(0.1, shape = [self.numLabels]))
+        net_output = tf.matmul(out_hidden, W_output) + b_output
+        predict = net_output
+        action = tf.argmax(net_input,1)
 
+        #create the true labels
+        y = tf.placeholder(tf.float32, shape = [None, self.numLabels])
 
-    tempList = attributeValuesDict.items()
-    for tup in tempList:
-        attribute = tup[0]
-        s = tup[1]
-        tempList2 = []
-        for value in s:
-            tempList2.append(value)
-        attributeValuesDictList[attribute] = tempList2
+        cost = (r * mask + tf.max(nextQ) * mask - mask*predict)**2
 
-    for instance in completeList:
-        processInstance(instance, attributeValuesDictList, labelList, continuous, attributeList)
+        trainer = tf.train.AdamOptimizer(learningRate).minimize(cost)
 
-    #shuffle list
-    random.seed(seed)
-    shuffledCompleteList = list(completeList)
-    random.shuffle(shuffledCompleteList)
-
-
-    labelNum = len(labelList)
-
-    listAtt = []
-    listLab = []
-    for instance in completeList:
-        listAtt.append(instance.attributeList)
-        listLab.append(instance.labelList)
-
-    tupleComplete = (listAtt, listLab)
-
-    instance = completeList[0]
-    numAtt = len(instance.attributeList)
-
-    buildTensorFlow(numAtt, labelNum, 50, .07, iterNum, labelList, 1334)
-    trainTensorFlow(tupleComplete, 10)
-
-def buildTensorFlow(numAttributes, numLabels, numNeurons, learningRate, iterNum, labelList, seed):
-    # state = tf.placeholder(tf.float32, shape = [numLabels])
-    # r = tf.placeholder(tf.float32, shape = [bumActions])
-    # predict = tf.placeholder(tf.float32, shape = [numLabels])
-    # oldPredict  = tf.placeholder(tf.float32, shape = [numLabels])
-    # mask = tf.placeholder(tf.float32, shape = [1])
-
-    state = tf.placeholder(tf.float32, shape = [numLabels])
-    nextQ = tf.placeholder(tf.float32, shape = [numActions])
-    r = tf.placeholder(tf.float32, shape = [numActions])
-    mask = tf.placeholder(tf.float32, shape = [1])
-
-    #create hidden layer
-    W_hidden = tf.Variable(tf.truncated_normal([numAttributes, numNeurons], stddev = 0.1))
-    b_hidden = tf.Variable(tf.constant(0.1, shape = [numNeurons]))
-    net_hidden = tf.matmul(state, W_hidden) + b_hidden
-    out_hidden = tf.sigmoid(net_hidden)
-
-    #create output layer
-    W_output = tf.Variable(tf.truncated_normal([numNeurons, numLabels], stddev = 0.1))
-    b_output = tf.Variable(tf.constant(0.1, shape = [numLabels]))
-    net_output = tf.matmul(out_hidden, W_output) + b_output
-    predict = net_output
-    action = tf.argmax(net_input,1)
-
-    #create the true labels
-    y = tf.placeholder(tf.float32, shape = [None, numLabels])
-
-    cost = (r * mask + tf.max(nextQ) * mask - mask*predict)**2
-
-    trainer = tf.train.AdamOptimizer(learningRate).minimize(cost)
-
-    #start a TF session
-    sess = tf.Session()
-    init = tf.initialize_all_variables().run(session = sess)
-    saver.save(sess, 'pokemon_model', global_step=0)
-
-
-def loadTensorFlow(sess):
-    save_dir = "."
-    ckpt = tf.train.get_checkpoint_steate(save_dir)
-    load_path = ckpt.model_checkpoint_path
-    saver.restore(sess, load_path)
-
-def trainTensorFlow(complete, maxSteps, numActions):
-    saver = tf.train.Saver()
-    sess = tf.Session()
-    loadTensorFlow(sess)
-    graph = tf.get_default_graph()
-
-    state = graph.get_tensor_by_name("state:0")
-    y = graph.get_tensor_by_name("y:0")
-    predict = graph.get_tensor_by_name("predict:0")
-    nextQ = graph.get_tensor_by_name("nextQ:0")
-    action = graph.get_tensor_by_name("action:0")
-    trainer = graph.get_tensor_by_name("trainer:0")
-    r = graph.get_tensor_by_name("r:0")
-    mask = graph.get_tensor_by_name("mask:0")
+        #start a TF session
+        sess = tf.Session()
+        init = tf.initialize_all_variables().run(session = sess)
+        saver.save(sess, 'pokemon_model', global_step=0)
 
 
-    D = []
-    steps = 0
-    maxSteps = iterNum
-    while steps < maxSteps:
-        steps +=1
-        # st,at,rt,st1 = call method
-        et = (st, at, rt, st1)
-        D.append(et)
+    def loadTensorFlow(self,sess):
+        save_dir = "."
+        ckpt = tf.train.get_checkpoint_steate(save_dir)
+        load_path = ckpt.model_checkpoint_path
+        saver.restore(sess, load_path)
 
-        shuffleD = random.shuffle(D)
-        T = []
+    def trainTensorFlow(self):
+        saver = tf.train.Saver()
+        sess = tf.Session()
+        loadTensorFlow(sess)
+        graph = tf.get_default_graph()
 
-        for i in range(0, math.ceil(len(D)/2)):
-            T.append(D[i])
-
-        while len(T) > 0:
-            #if running slow change while loop
-            et = T.pop()
-            nQ = sess.run(predict, feed_dict = {state:et.st1})
-            i = labelList.index(et.at)
-            m = [0] * numActions
-            m[i] = 1
-            sess.run(trainer, feed_dict = {mask: m, reward:r, state:st, nextQ: nQ})
-            if steps % 10 == 0:
-                saver.save(sess, 'pokemon_model', global_step=steps)
-
-def testTensorFlow(complete):
-    saver = tf.train.Saver()
-    sess = tf.Session()
-    loadTensorFlow(sess)
-    graph = tf.get_default_graph()
-
-    state = graph.get_tensor_by_name("state:0")
-    y = graph.get_tensor_by_name("y:0")
-    predict = graph.get_tensor_by_name("predict:0")
-    oldPredict = graph.get_tensor_by_name("oldPredict:0")
-    action = graph.get_tensor_by_name("action:0")
-    trainer = graph.get_tensor_by_name("trainer:0")
-    r = graph.get_tensor_by_name("r:0")
-    mask = graph.get_tensor_by_name("mask:0")
-
-    #test
-    p = sess.run(predict, feed_dict = {state: complete[0]})
+        state = graph.get_tensor_by_name("state:0")
+        y = graph.get_tensor_by_name("y:0")
+        predict = graph.get_tensor_by_name("predict:0")
+        nextQ = graph.get_tensor_by_name("nextQ:0")
+        action = graph.get_tensor_by_name("action:0")
+        trainer = graph.get_tensor_by_name("trainer:0")
+        r = graph.get_tensor_by_name("r:0")
+        mask = graph.get_tensor_by_name("mask:0")
 
 
-def processInstance(instance, attributeValuesDictList, labelList, continuous, attList):
-    instance.labelListProcess(labelList)
-    instance.attributeListProcess(attributeValuesDictList, continuous, attList)
+        D = []
+        steps = 0
+        maxSteps = self.iterNum
+        while steps < maxSteps:
+            steps +=1
+            # st,at,rt,st1 = call method
+            et = (st, at, rt, st1)
+            D.append(et)
 
-def update():
-    p = sess.run(predict, feed_dict = {x: et.st})
-    qsa= [0] * len(p) #create matrix
-    qsa[et.at] = p[et.at] #Q(st, at)
+            shuffleD = random.shuffle(D)
+            T = []
 
-    qsa2 = [0] * len(p) #create matrix
-    mask[et.at] = 1
+            for i in range(0, math.ceil(len(D)/2)):
+                T.append(D[i])
 
-    p = sess.run(predict, feed_dict = {x: et.st+1})
-    maxP = max(p)
+            while len(T) > 0:
+                #if running slow change while loop
+                et = T.pop()
+                nQ = sess.run(predict, feed_dict = {state:et.st1})
+                i = self.labelList.index(et.at)
+                m = [0] * self.numLabels
+                m[i] = 1
+                sess.run(trainer, feed_dict = {mask: m, reward:r, state:st, nextQ: nQ})
+                if steps % 10 == 0:
+                    saver.save(sess, 'pokemon_model', global_step=steps)
+
+    def testTensorFlow(self,state):
+        saver = tf.train.Saver()
+        sess = tf.Session()
+        loadTensorFlow(sess)
+        graph = tf.get_default_graph()
+
+        state = graph.get_tensor_by_name("state:0")
+        y = graph.get_tensor_by_name("y:0")
+        predict = graph.get_tensor_by_name("predict:0")
+        oldPredict = graph.get_tensor_by_name("oldPredict:0")
+        action = graph.get_tensor_by_name("action:0")
+        trainer = graph.get_tensor_by_name("trainer:0")
+        r = graph.get_tensor_by_name("r:0")
+        mask = graph.get_tensor_by_name("mask:0")
+
+        #test
+        p = sess.run(predict, feed_dict = {state: complete[0]})
+
+
+    # def processInstance(self,instance, attributeValuesDictList, labelList, continuous, attList):
+    #     instance.labelListProcess(self.labelList)
+    #     instance.attributeListProcess(attributeValuesDictList, continuous, attList)
+
+    def update(self):
+        p = sess.run(predict, feed_dict = {x: et.st})
+        qsa= [0] * len(p) #create matrix
+        qsa[et.at] = p[et.at] #Q(st, at)
+
+        qsa2 = [0] * len(p) #create matrix
+        mask[et.at] = 1
+
+        p = sess.run(predict, feed_dict = {x: et.st+1})
+        maxP = max(p)
 
 
 
-# code for interacting w simulator
+    # code for interacting w simulator
 
-def reward(self, action, state):
-    damage = 0
-    active = 0
-    rtn = 0
-    acc = 100 #if the action is a switch, accuracy is irrelevant
+    def reward(self, action, state, atkMult):
+        damage = 0
+        active = 0
+        rtn = 0
+        acc = 100 #if the action is a switch, accuracy is irrelevant
 
-    if(state.user1Active):
-        active = 1
-    elif(state.user2Active):
-        active = 2
-    elif(state.user3Active):
-        active = 3
-    else:
-        if( (not(state.user1HP == 0)) or (not (state.user2HP == 0)) or (not (state.user3HP==0))):
-            print("we don't know who's active")
-            sys.exit(1)
-        return None
-    if(action == "quick"):
-        if(active == 1):
-            damage += state.user1QDmg + 2/3 * (state.user1Atk - state.oppDef)
-            acc = state.user1QAcc
+        if(state.user1Active):
+            active = 1
+        elif(state.user2Active):
+            active = 2
+        elif(state.user3Active):
+            active = 3
+        else:
+            if( (not(state.user1HP == 0)) or (not (state.user2HP == 0)) or (not (state.user3HP==0))):
+                print("we don't know who's active")
+                sys.exit(1)
+            return None
+        if(action == "quick"):
+            if(active == 1):
+                damage += state.user1QDmg + 2/3 * (state.user1Atk - state.oppDef)
+                acc = state.user1QAcc
+            elif (active == 2):
+                damage += state.user2QDmg + 2/3 * (state.user2Atk - state.oppDef)
+                acc = state.user2QAcc
+            elif (active ==3):
+                damage += state.user3QDmg + 2/3 * (state.user3Atk - state.oppDef)
+                acc = state.user3QAcc
+        elif(action == "strong"):
+            if(active == 1):
+                damage += state.user1SDmg + 2/3 * (state.user1Atk - state.oppDef)
+                acc = state.user1SAcc
+            elif (active == 2):
+                damage += state.user2SDmg + 2/3 * (state.user2Atk - state.oppDef)
+                acc = state.user2SAcc
+            elif (active ==3):
+                damage += state.user3SDmg + 2/3 * (state.user3Atk - state.oppDef)
+                acc = state.user3SAcc
+        rtn += math.log10(damage)
+        acc = acc / 100
+        rtn = rtn * acc
+
+        if(state.oppHP - (damage * acc) < 1): #fainting bonus
+            rtn += 2.5
+
+        quickMap = atkMulk[state.oppQType]
+        strongMap = atkMult[state.oppSType]
+        quick = 1 #defending muliplier
+        strong = 1 #defending multiplier
+        quickAtk = 1 # attacking multiplier
+        strongAtk = 1 # attacking multiplier
+
+        if(active == 1 ):
+            quick = 1 / (quickMap[state.user1Type1] * quickMap[state.user1Type2])
+            strong = 1 / ( strongMap[state.user1Type1] * strongMap[state.user1Type2] )
+            quickAtkMap = atkMulk[state.user1QType]
+            strongAtkMap = atkMult[state.user1SType]
+            quickAtk = quickAtkMap[state.oppType1] * quickAtkMap[stte.oppType2]
+            strongAtk = strongAtkMap[state.oppType1] * strongAtkMap[state.oppType2]
         elif (active == 2):
-            damage += state.user2QDmg + 2/3 * (state.user2Atk - state.oppDef)
-            acc = state.user2QAcc
-        elif (active ==3):
-            damage += state.user3QDmg + 2/3 * (state.user3Atk - state.oppDef)
-            acc = state.user3QAcc
-    elif(action == "strong"):
-        if(active == 1):
-            damage += state.user1SDmg + 2/3 * (state.user1Atk - state.oppDef)
-            acc = state.user1SAcc
-        elif (active == 2):
-            damage += state.user2SDmg + 2/3 * (state.user2Atk - state.oppDef)
-            acc = state.user2SAcc
-        elif (active ==3):
-            damage += state.user3SDmg + 2/3 * (state.user3Atk - state.oppDef)
-            acc = state.user3SAcc
-    rtn += math.log10(damage)
-    acc = acc / 100
-    rtn = rtn * acc
+            quick = 1 / (quickMap[state.user2Type1] * quickMap[state.user2Type2])
+            strong = 1 / (strongMap[state.user2Type1] * strongMap[state.user2Type2])
+            quickAtkMap = atkMulk[state.user2QType]
+            strongAtkMap = atkMult[state.user2SType]
+            quickAtk = quickAtkMap[state.oppType1] * quickAtkMap[stte.oppType2]
+            strongAtk = strongAtkMap[state.oppType1] * strongAtkMap[state.oppType2]
+        elif (active == 3):
+            quick = 1 / (quickMap[state.user3Type1] * quickMap[state.user3Type2] )
+            strong = 1 / (strongMap[state.user3Type1] * strongMap[state.user3Type2] )
+            quickAtkMap = atkMulk[state.user3QType]
+            strongAtkMap = atkMult[state.user3SType]
+            quickAtk = quickAtkMap[state.oppType1] * quickAtkMap[stte.oppType2]
+            strongAtk = strongAtkMap[state.oppType1] * strongAtkMap[state.oppType2]
 
-    if(state.oppHP - (damage * acc) < 1): #fainting bonus
-        rtn += 2.5
+        a = [math.log(quick,2), math.log(strong,2), math.log(quickAtk,2), math.log(strongAtk,2)]
+        avgMult = numpy.mean(a)
+        rtn += avgMult
 
-    quickMap = self.atkMulk[state.oppQType]
-    strongMap = self.atkMult[state.oppSType]
-    quick = 1 #defending muliplier
-    strong = 1 #defending multiplier
-    quickAtk = 1 # attacking multiplier
-    strongAtk = 1 # attacking multiplier
+        rtn = rtn - math.log10(state.turns)
+        return rtn
 
-    if(active == 1 ):
-        quick = 1 / (quickMap[state.user1Type1] * quickMap[state.user1Type2])
-        strong = 1 / ( strongMap[state.user1Type1] * strongMap[state.user1Type2] )
-        quickAtkMap = self.atkMulk[state.user1QType]
-        strongAtkMap = self.atkMult[state.user1SType]
-        quickAtk = quickAtkMap[state.oppType1] * quickAtkMap[stte.oppType2]
-        strongAtk = strongAtkMap[state.oppType1] * strongAtkMap[state.oppType2]
-    elif (active == 2):
-        quick = 1 / (quickMap[state.user2Type1] * quickMap[state.user2Type2])
-        strong = 1 / (strongMap[state.user2Type1] * strongMap[state.user2Type2])
-        quickAtkMap = self.atkMulk[state.user2QType]
-        strongAtkMap = self.atkMult[state.user2SType]
-        quickAtk = quickAtkMap[state.oppType1] * quickAtkMap[stte.oppType2]
-        strongAtk = strongAtkMap[state.oppType1] * strongAtkMap[state.oppType2]
-    elif (active == 3):
-        quick = 1 / (quickMap[state.user3Type1] * quickMap[state.user3Type2] )
-        strong = 1 / (strongMap[state.user3Type1] * strongMap[state.user3Type2] )
-        quickAtkMap = self.atkMulk[state.user3QType]
-        strongAtkMap = self.atkMult[state.user3SType]
-        quickAtk = quickAtkMap[state.oppType1] * quickAtkMap[stte.oppType2]
-        strongAtk = strongAtkMap[state.oppType1] * strongAtkMap[state.oppType2]
+    def stateAction(self, state, action, atkMult): # returns state, action, reward, next state
+        newState = deepcopy(state)
+        newState.turns = state.turns + 1
+        active = 0
+        if(state.user1Active):
+            active = 1
+        elif(state.user2Active):
+            active = 2
+        elif(state.user3Active):
+            active = 3
+        else:
+            if( (not(state.user1HP == 0)) or (not (state.user2HP == 0)) or (not (state.user3HP==0))):
+                print("we don't know who's active")
+                sys.exit(1)
+            return None
+        if(action == "quick"):
+            if(active == 1):
+                damage = state.user1QDmg + 2/3 (state.user1Atk - state.oppDef)
+                multiplierMap = atkMult[state.user1QType]
+                multiplier = multiplierMap[oppType1] * multiplierMap[oppType2]
+                totalDmg = multiplier * damage
+                if(totalDmg < 5):
+                    totalDmg = 5
+                newState.oppHP = state.oppHP - totalDmg
+            elif(active == 2):
+                damage = state.user2QDmg + 2/3 (state.user2Atk - state.oppDef)
+                multiplierMap = atkMult[state.user2QType]
+                multiplier = multiplierMap[oppType1] * multiplierMap[oppType2]
+                totalDmg = multiplier * damage
+                if(totalDmg < 5):
+                    totalDmg = 5
+                newState.oppHP = state.oppHP - totalDmg
+            else:
+                damage = state.user3QDmg + 2/3 (state.user3Atk - state.oppDef)
+                multiplierMap = atkMult[state.user3QType]
+                multiplier = multiplierMap[oppType1] * multiplierMap[oppType2]
+                totalDmg = multiplier * damage
+                if(totalDmg < 5):
+                    totalDmg = 5
+                newState.oppHP = state.oppHP - totalDmg
+        elif(action == "strong"):
+            if(active == 1):
+                damage = state.user1SDmg + 2/3 (state.user1Atk - state.oppDef)
+                multiplierMap = atkMult[state.user1SType]
+                multiplier = multiplierMap[oppType1] * multiplierMap[oppType2]
+                totalDmg = multiplier * damage
+                if(totalDmg < 5):
+                    totalDmg = 5
+                newState.oppHP = state.oppHP - totalDmg
+            elif(active == 2):
+                damage = state.user2SDmg + 2/3 (state.user2Atk - state.oppDef)
+                multiplierMap = atkMult[state.user2SType]
+                multiplier = multiplierMap[oppType1] * multiplierMap[oppType2]
+                totalDmg = multiplier * damage
+                if(totalDmg < 5):
+                    totalDmg = 5
+                newState.oppHP = state.oppHP - totalDmg
+            else:
+                damage = state.user3SDmg + 2/3 (state.user3Atk - state.oppDef)
+                multiplierMap = atkMult[state.user3SType]
+                multiplier = multiplierMap[oppType1] * multiplierMap[oppType2]
+                totalDmg = multiplier * damage
+                if(totalDmg < 5):
+                    totalDmg = 5
+                newState.oppHP = state.oppHP - totalDmg
+        elif(action == "switch1"):
+            if(active == 1):
+                if(state.user2HP > 0):
+                    newState.user1Active = False
+                    newState.user2Active = True
+                elif(state.user3HP > 0):
+                    newState.user1Active = False
+                    newState.user3Active = True
+            elif ( active ==2 ):
+                if (state.user3HP>0):
+                    newState.user2Active = False
+                    newState.user3Active = True
+                elif (state.user1HP > 0):
+                    newState.user2Active = False
+                    newState.user1Active = True
+            else:
+                if(state.user1HP > 0):
+                    newState.user3Active = False
+                    newState.user1Active = True
+                elif (state.user2HP > 0):
+                    newState.user3Active = False
+                    newState.user1Active = True
+        elif(action == "switch2"):
+            if(active == 1):
+                if(state.user3HP > 0):
+                    newState.user1Active = False
+                    newState.user3Active = True
+                elif(state.user2HP > 0):
+                    newState.user1Active = False
+                    newState.user2Active = True
+            elif ( active ==2 ):
+                if (state.user1HP>0):
+                    newState.user2Active = False
+                    newState.user1Active = True
+                elif (state.user3HP > 0):
+                    newState.user2Active = False
+                    newState.user3Active = True
+            else:
+                if(state.user2HP > 0):
+                    newState.user3Active = False
+                    newState.user2Active = True
+                elif (state.user1HP > 0):
+                    newState.user3Active = False
+                    newState.user1Active = True
+        reward = reward(action, state, atkMult)
+        return state, action, reward, newState
 
-    a = [math.log(quick,2), math.log(strong,2), math.log(quickAtk,2), math.log(strongAtk,2)]
-    avgMult = numpy.mean(a)
-    rtn += avgMult
 
-    rtn = rtn - math.log10(state.turns)
-    return rtn
-
-def stateAction(self, state, action): # returns state, action, reward, next state
-    newState = deepcopy(state)
-    newState.turns = state.turns + 1
-    if(action == "quick"):
-        print()
-    elif(action == "strong"):
-        print()
-    elif(action == "switch1"):
-        print()
-    elif(action == "switch2"):
-        print()
-
-    reward = reward(action, state)
-    return state, action, reward, newState
+    def chooseMove(self, team, activeOpp, typeMatchups, turns):
+        state = State(turns, team[0].name, team[0].active, team[0].hp, team[0].attack, team[0].defense, team[0].speed, team[0].type1, team[0].type2, team[0].quickMoveType, team[0].quickMovePower, team[0].quickMoveAcc, team[0].strongMoveType, team[0].strongMovePower, team[0].strongMoveType, team[1].name, team[1].active, team[1].hp, team[1].attack, team[1].defense, team[1].speed, team[1].type1, team[1].type2, team[1].quickMoveType, team[1].quickMovePower, team[1].quickMoveAcc, team[1].strongMoveType, team[1].strongMovePower, team[1].strongMoveType, team[2].name, team[2].active, team[2].hp, team[2].attack, team[2].defense, team[2].speed, team[2].type1, team[2].type2, team[2].quickMoveType, team[2].quickMovePower, team[2].quickMoveAcc, team[2].strongMoveType, team[2].strongMovePower, team[2].strongMoveType, activeOpp.name, activeOpp.hp, activeOpp.attack, activeOpp.defense, activeOpp.speed, activeOpp.type1, activeOpp.type2, activeOpp.quickMoveType, activeOpp.quickMovePower, activeOpp.quickMoveAcc, activeOpp.strongMoveType, activeOpp.strongMovePower, activeOpp.strongMoveType)
+        #get action from nn
+        #train nn (testTensorFlow() , but how do we pass in state appropriately?)
+        # return action
 
 
 
-
-
-if __name__ == '__main__':
-    main()
+    # if __name__ == '__main__':
+    #     main()

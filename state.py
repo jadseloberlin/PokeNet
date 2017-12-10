@@ -1,7 +1,7 @@
 class State(object):
     def __init__(self, turns, user1Name, user1Active, user1HP, user1Atk, user1Def, user1Spe, user1Type1, user1Type2, user1QType, user1QDmg, user1QAcc, user1SType, user1SDmg, user1SAcc,
-    user2Name, user2Active, user2HP, user2Atk, user2Def, user2Spe, user2Type2, user2Type2, user2QType, user2QDmg, user2QAcc, user2SType, user2SDmg, user2SAcc,
-    user3Name, user3Active, user3HP, user3Atk, user3Def, user3Spe, user3Type3, user3Type2, user3QType, user3QDmg, user3QAcc, user3SType, user3SDmg, user3SAcc,
+    user2Name, user2Active, user2HP, user2Atk, user2Def, user2Spe, user2Type1, user2Type2, user2QType, user2QDmg, user2QAcc, user2SType, user2SDmg, user2SAcc,
+    user3Name, user3Active, user3HP, user3Atk, user3Def, user3Spe, user3Type1, user3Type2, user3QType, user3QDmg, user3QAcc, user3SType, user3SDmg, user3SAcc,
     oppName, oppHP, oppAtk, oppDef, oppSpe, oppType1, oppType2, oppQType, oppQDmg, oppQAcc, oppSType, oppSDmg, oppSAcc):
 
         self.turns = turns
@@ -52,7 +52,6 @@ class State(object):
         self.user3SAcc = user3SAcc
 
         self.oppName = oppName
-        self.oppActive = oppActive
         self.oppHP = oppHP
         self.oppAtk = oppAtk
         self.oppDef = oppDef

@@ -1,7 +1,7 @@
 from copy import deepcopy
 import os
 import math
-import nn
+from nn import NN
 from userControl import UserControl
 from basicAI import BasicAI
 from mon import Mon
@@ -217,8 +217,8 @@ class BattleSim(object):
 		#load AI
         if(p1AI=="user") :
 	           self.p1 = UserControl()
-		elif(p1AI=="nn"):
-		 	self.p1 = nn()
+        elif(p1AI=="nn"):
+            self.p1 = NN()
         elif(p1AI == "basic"):
             self.p1 = BasicAI()
         else:
@@ -227,8 +227,8 @@ class BattleSim(object):
 
         if(p2AI=="user"):
             self.p2 = UserControl()
-		elif(p2AI == "nn"):
-			self.p2 = nn()
+        elif(p2AI == "nn"):
+            self.p2 = NN()
         elif(p2AI == "basic"):
             self.p2 = BasicAI()
         else:
@@ -270,6 +270,9 @@ class BattleSim(object):
     def isDefeated(self, team):
         # returns whether or not team has no usable Pokemon left
         return team[0].defeated and team[1].defeated & team[2].defeated
+
+    def onlyOneLeft(self, team):
+        return ((team[0].defeated and team[1].defeated) or (team[0].defeated and team[2].defeated) or (team[1].defeated and team[2].defeated))
 
     def active(self, team):
         if team[0].active :
@@ -402,8 +405,13 @@ class BattleSim(object):
             print("P1's "+active1.name+" has "+str(int(active1.hp))+" HP left. ")
             print("P2's "+active2.name+" has "+str(int(active2.hp))+" HP left. ")
             print("")
-            move1 = self.p1.chooseMove(self.team1, active2, self.atkMult)
-            move2 = self.p2.chooseMove(self.team2, active1, self.atkMult)
+            move1 = self.p1.chooseMove(self.team1, active2, self.atkMult, turns)
+            move2 = self.p2.chooseMove(self.team2, active1, self.atkMult, turns)
+
+            if(self.onlyOneLeft(self.team1) and (move1 == "switch1" or move1 == "switch2")):
+                move1 = "quick"
+            if(self.onlyOneLeft(self.team2) and (move2 == "switch1" or move2 == "switch2")):
+                move2 = "quick"
             if(move1 == "exit" or move2 == "exit"):
                 print("Thank you!")
                 sys.exit(0)

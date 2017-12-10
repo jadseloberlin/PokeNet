@@ -6,7 +6,7 @@ import sys
 class BasicAI(object):
     def __init__(self):
         self.nothing = 0
-    def chooseMove(self, team, activeOpp, typeMatchups):
+    def chooseMove(self, team, activeOpp, typeMatchups, turns):
         randNum = random.randint(0,100) # randomly choose an action
         if(randNum%27==0):
             return "switch1"
