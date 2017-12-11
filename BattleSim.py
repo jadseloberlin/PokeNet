@@ -11,7 +11,8 @@ import numpy
 
 def main():
     #battle = BattleSim(input("Who controls P1? Choose 'user' or 'basic' : "),input("Who controls P2? Choose 'user' or 'basic' : "),input("Pick P1's first Pokemon: "),input("Pick P1's second Pokemon: "),input("Pick P1's third Pokemon: "),input("Pick P2's first Pokemon: "),input("Pick P2's second Pokemon: "),input("Pick P2's third Pokemon: "))
-    battle = BattleSim(input("Who controls P1? Choose 'user' or 'basic' : "),"basic",input("Pick P1's first Pokemon: "),input("Pick P1's second Pokemon: "),input("Pick P1's third Pokemon: "),"Charizard", "Blastoise", "Venusaur")
+    #battle = BattleSim(input("Who controls P1? Choose 'user', 'nn' or 'basic' : "),"basic",input("Pick P1's first Pokemon: "),input("Pick P1's second Pokemon: "),input("Pick P1's third Pokemon: "),"Charizard", "Blastoise", "Venusaur")
+    battle = BattleSim(input("Who controls P1? Choose 'user', 'nn' or 'basic' : "),"basic","Zapdos","Moltres","Articuno","Charizard", "Blastoise", "Venusaur")
 
 
 class BattleSim(object):

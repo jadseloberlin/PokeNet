@@ -109,10 +109,8 @@ class NN(object):
         self.D = [] #should we store this between games?
 
 
-
-        #saver = tf.train.Saver()
         self.sess = tf.Session()
-        #loadTensorFlow(sess) or build
+
 
         self.state = None
         self.y = None
@@ -123,21 +121,25 @@ class NN(object):
         self.r = None
         self.mask = None
 
+        self.loadTensorFlow(self.sess)
+
+
+
     def buildTensorFlow(self):
 
         # r = tf.placeholder(tf.float32, shape = [bumActions])
         # predict = tf.placeholder(tf.float32, shape = [numLabels])
 
 
-        self.state = tf.placeholder(tf.float32, shape = [self.numLabels])
-        self.nextQ = tf.placeholder(tf.float32, shape = [self.numLabels])
+        self.state = tf.placeholder(tf.float32, shape = [self.numAttributes])
+        self.nextQ = tf.placeholder(tf.float32, shape = [self.numLabels]) #self.numAttributes
         self.r = tf.placeholder(tf.float32, shape = [self.numLabels])
         self.mask = tf.placeholder(tf.float32, shape = [1])
 
         #create hidden layer
         W_hidden = tf.Variable(tf.truncated_normal([self.numAttributes, self.numNeurons], stddev = 0.1))
         b_hidden = tf.Variable(tf.constant(0.1, shape = [self.numNeurons]))
-        net_hidden = tf.matmul(state, W_hidden) + b_hidden
+        net_hidden = tf.matmul(self.state, W_hidden) + b_hidden
         out_hidden = tf.sigmoid(net_hidden)
 
         #create output layer
@@ -161,23 +163,25 @@ class NN(object):
 
 
     def loadTensorFlow(self,sess):
-        save_dir = "."
-        ckpt = tf.train.get_checkpoint_steate(save_dir)
-        load_path = ckpt.model_checkpoint_path
-        saver.restore(sess, load_path)
+        try:
+            save_dir = "."
+            ckpt = tf.train.get_checkpoint_state(save_dir)
+            load_path = ckpt.model_checkpoint_path
+            saver.restore(sess, load_path)
 
-        saver = tf.train.Saver()
-        graph = tf.get_default_graph()
+            saver = tf.train.Saver()
+            graph = tf.get_default_graph()
 
-        self.state = graph.get_tensor_by_name("state:0")
-        self.y = graph.get_tensor_by_name("y:0")
-        self.predict = graph.get_tensor_by_name("predict:0")
-        self.nextQ = graph.get_tensor_by_name("nextQ:0")
-        self.action = graph.get_tensor_by_name("action:0")
-        self.trainer = graph.get_tensor_by_name("trainer:0")
-        self.r = graph.get_tensor_by_name("r:0")
-        self.mask = graph.get_tensor_by_name("mask:0")
-
+            self.state = graph.get_tensor_by_name("state:0")
+            self.y = graph.get_tensor_by_name("y:0")
+            self.predict = graph.get_tensor_by_name("predict:0")
+            self.nextQ = graph.get_tensor_by_name("nextQ:0")
+            self.action = graph.get_tensor_by_name("action:0")
+            self.trainer = graph.get_tensor_by_name("trainer:0")
+            self.r = graph.get_tensor_by_name("r:0")
+            self.mask = graph.get_tensor_by_name("mask:0")
+        except:
+            self.buildTensorFlow()
 
     def trainTensorFlow(self, st, at, rt, st1):
         et = (st, at, rt, st1)
@@ -187,7 +191,7 @@ class NN(object):
         shuffleD = random.shuffle(self.D)
         T = []
 
-        for i in range(0, min(16, len(shuffleD)):
+        for i in range(0, min(16, len(shuffleD))):
             T.append(shuffleD[i])
 
         while len(T) > 0:
@@ -429,7 +433,9 @@ class NN(object):
 
     def cleanUp(self):
         #save stuff
-        
+        saver = tf.train.Saver()
+        saver.save(self.sess, "pokemon_model")
+
         return True
 
 
