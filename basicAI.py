@@ -15,3 +15,5 @@ class BasicAI(object):
         if(randNum%2==1):
             return "strong"
         return "quick"
+    def cleanUp(self):
+        return True

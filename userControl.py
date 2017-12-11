@@ -9,6 +9,8 @@ class UserControl(object):
         while((not (move == "quick") ) and (not (move == "strong")) and (not (move == "switch1")) and (not (move =="switch2")) and (not (move == "exit")) ):
             move = input("Plese choose a valid move: switch1, switch2, strong, quick, exit :  ")
         return move
+    def cleanUp(self):
+        return True
 
 	# def chooseMove(ArrayList<Mon> team, Mon active, ArrayList<Mon> oppTeam, Mon activeOpp,
 	# 		HashMap<String, Move> validMoves, HashMap<String, HashMap<String, Double>> typeMatchups):

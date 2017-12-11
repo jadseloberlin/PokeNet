@@ -548,6 +548,8 @@ class BattleSim(object):
 							#if active1 wasn't knocked out
                             self.strong(active1, active2, self.team2)
         print("")
+        self.p1.cleanUp()
+        self.p2.cleanUp()
         return self.isDefeated(self.team2)
 
     def quick(self, attacker, target, targetTeam): #returns true if target faints

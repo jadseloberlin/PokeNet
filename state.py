@@ -65,4 +65,67 @@ class State(object):
         self.oppSDmg = oppSDmg
         self.oppSAcc = oppSAcc
 
-        #do we need the full opponent team ?
+    def toList(self):
+        rtn = []
+        rtn.append(self.turns)
+
+        rtn.append(self.user1Name)
+        rtn.append(self.user1Active)
+        rtn.append(self.user1HP)
+        rtn.append(self.user1Atk)
+        rtn.append(self.user1Def)
+        rtn.append(self.user1Spe)
+        rtn.append(self.user1Type1)
+        rtn.append(self.user1Type2)
+        rtn.append(self.user1QType)
+        rtn.append(self.user1QDmg)
+        rtn.append(self.user1QAcc)
+        rtn.append(self.user1SType)
+        rtn.append(self.user1SDmg)
+        rtn.append(self.user1SAcc)
+
+        rtn.append(self.user2Name)
+        rtn.append(self.user2Active)
+        rtn.append(self.user2HP)
+        rtn.append(self.user2Atk)
+        rtn.append(self.user2Def)
+        rtn.append(self.user2Spe)
+        rtn.append(self.user2Type1)
+        rtn.append(self.user2Type2)
+        rtn.append(self.user2QType)
+        rtn.append(self.user2QDmg)
+        rtn.append(self.user2QAcc)
+        rtn.append(self.user2SType)
+        rtn.append(self.user2SDmg)
+        rtn.append(self.user2SAcc)
+
+        rtn.append(self.user3Name)
+        rtn.append(self.user3Active)
+        rtn.append(self.user3HP)
+        rtn.append(self.user3Atk)
+        rtn.append(self.user3Def)
+        rtn.append(self.user3Spe)
+        rtn.append(self.user3Type1)
+        rtn.append(self.user3Type2)
+        rtn.append(self.user3QType)
+        rtn.append(self.user3QDmg)
+        rtn.append(self.user3QAcc)
+        rtn.append(self.user3SType)
+        rtn.append(self.user3SDmg)
+        rtn.append(self.user3SAcc)
+
+        rtn.append(self.oppName)
+        rtn.append(self.oppHP)
+        rtn.append(self.oppAtk)
+        rtn.append(self.oppDef)
+        rtn.append(self.oppSpe)
+        rtn.append(self.oppType1)
+        rtn.append(self.oppType2)
+        rtn.append(self.oppQType)
+        rtn.append(self.oppQDmg)
+        rtn.append(self.oppQAcc)
+        rtn.append(self.oppSType)
+        rtn.append(self.oppSDmg)
+        rtn.append(self.oppSAcc)
+
+        return rtn
