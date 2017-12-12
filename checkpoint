@@ -1,2 +1,2 @@
-model_checkpoint_path: "pokemon_model-300"
-all_model_checkpoint_paths: "pokemon_model-300"
+model_checkpoint_path: "pokemon_model-14200"
+all_model_checkpoint_paths: "pokemon_model-14200"

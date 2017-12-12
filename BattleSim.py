@@ -36,8 +36,8 @@ def main():
             battle = BattleSim(True, i, p1,0, 0,0,0, 0,0,0)
             if(battle.isDefeated(battle.team2)):
                 winCount = winCount + 1
-            if(i % 50 == 0):
-                print("PokeNet has won "+winCount+" games out of "+i+" total. This is a win rate of "+(winCount/i)*100+"%.")
+            if(i % 10 == 0):
+                print("PokeNet has won "+str(winCount)+" games out of "+str(i)+" total. This is a win rate of "+str((winCount/i)*100)+"%.")
             i += 1
 
 
@@ -467,10 +467,34 @@ class BattleSim(object):
             return
 
 
+
+    def settleDraw(self, t1, t2):
+        t1Count = 0
+        t2Count = 0
+        for mon in t1:
+            if (mon.hp>0):
+                t1Count += 1
+        for mon in t2:
+            if(mon.hp>0):
+                t2Count += 1
+        if(t1Count == t2Count):
+            t1HP = 0
+            t2HP = 0
+            for mon in t1:
+                if(mon.hp>0):
+                    t1HP += mon.hp
+            for mon in t2:
+                if(mon.hp>0):
+                    t2HP+= mon.hp
+            return t1HP >= t2HP
+        else:
+            return t1Count > t2Count
 	#returns true if p1 wins, false if p2 wins
     def battle(self, training, games):
         turns = 0
         while not (self.isDefeated(self.team1)) and not (self.isDefeated(self.team2)):
+            if(turns > 49):
+                return self.settleDraw(self.team1, self.team2) # returns true if p1 wins
             if not training:
                 print()
             turns += 1
@@ -478,7 +502,7 @@ class BattleSim(object):
                 print("This is turn number "+str(turns))
             active1 = self.active(self.team1)
             active2 = self.active(self.team2)
-            if not training:
+            if not training: #not training:
                 print("P1's "+active1.name+" has "+str(int(active1.hp))+" HP left. ")
                 print("P2's "+active2.name+" has "+str(int(active2.hp))+" HP left. ")
                 print("")

@@ -98,7 +98,7 @@ class NN(object):
 
     def __init__(self):
         self.numNeurons = 50
-        self.learningRate = .07
+        self.learningRate = .001
         self.seed = 1334
         self.iterNum = 750
         self.numAttributes = 460
@@ -226,13 +226,16 @@ class NN(object):
             m[i] = 1
             self.sess.run(self.trainer, feed_dict = {self.mask: m, self.r: rtList, self.state:stList, self.nextQ: nQ[0]*.99})
 
-    def testTensorFlow(self,curState):
+    def testTensorFlow(self,curState, games):
         #convert curState to list
         curStateList = curState.toList()
 
         #test
         p = self.sess.run(self.predict, feed_dict = {self.state: curStateList})
         a = numpy.argmax(p)
+        randomCheck = random.randint(0,10000)
+        if(randomCheck < 10000/games):
+            a = random.randint(0,3) #choose a random action
         action= self.labelList[a]
         return action
 
@@ -478,7 +481,7 @@ class NN(object):
         if( (not (self.prevState == None))):
             self.trainTensorFlow(self.prevState, self.prevAction, self.prevReward, newState) #training the network
 
-        action = self.testTensorFlow(newState) #get action from nn
+        action = self.testTensorFlow(newState, games) #get action from nn
         reward = self.reward(action, newState, typeMatchups)
         self.prevState = newState
         self.prevReward = reward
