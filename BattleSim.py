@@ -14,30 +14,31 @@ def main():
     #battle = BattleSim(input("Who controls P1? Choose 'user', 'nn' or 'basic' : "),"basic",input("Pick P1's first Pokemon: "),input("Pick P1's second Pokemon: "),input("Pick P1's third Pokemon: "),"Charizard", "Blastoise", "Venusaur")
     #battle = BattleSim(input("Who controls P1? Choose 'user', 'nn' or 'basic' : "),"basic","Zapdos","Moltres","Articuno","Charizard", "Blastoise", "Venusaur")
     p1AI = input("Single battle or training nn?: 'single' or 'nn-train' or 'inf-train' : ")
-    while( (not (p1AI == "single") or (not (p1AI == 'inf-train')) or (not (p1AI == "nn-train")))):
-        if(p1AI == "single"):
-            battle = BattleSim(False, 0, input("Who controls P1? Choose 'user', 'nn' or 'basic' : "),input("Who controls P2? Choose 'user', 'nn' or 'basic' : "),input("Pick P1's first Pokemon: "),input("Pick P1's second Pokemon: "),input("Pick P1's third Pokemon: "),input("Pick P2's first Pokemon: "),input("Pick P2's second Pokemon: "),input("Pick P2's third Pokemon: "))
-        elif(p1AI == "nn-train"):
-            maxGames = input("How many games do you want to train on? ")
-            winCount = 0.0
-            p1 = NN()
-            for i in range(1, int(maxGames)+1):
-                battle = BattleSim(True, i, p1,0, 0,0,0, 0,0,0)
-                if(battle.isDefeated(battle.team2)):
-                    winCount = winCount + 1
-                #if(i % 100 == 0):
-                print("PokeNet has won "+str(winCount)+" games out of "+str(i)+" total. This is a win rate of "+str((winCount/i)*100)+"%.")
-        else:
-            winCount = 0.0
-            i = 1
-            p1 = NN()
-            while(True):
-                battle = BattleSim(True, i, p1,0, 0,0,0, 0,0,0)
-                if(battle.isDefeated(battle.team2)):
-                    winCount = winCount + 1
-                if(i % 50 == 0):
-                    print("PokeNet has won "+winCount+" games out of "+i+" total. This is a win rate of "+(winCount/i)*100+"%.")
-                i += 1
+    while( (not (p1AI == "single") and (not (p1AI == 'inf-train')) and (not (p1AI == "nn-train")))):
+        p1AI = input("Please choose a valid option: 'single' or 'nn-train' or 'inf-train' : ")
+    if(p1AI == "single"):
+        battle = BattleSim(False, 0, input("Who controls P1? Choose 'user', 'nn' or 'basic' : "),input("Who controls P2? Choose 'user', 'nn' or 'basic' : "),input("Pick P1's first Pokemon: "),input("Pick P1's second Pokemon: "),input("Pick P1's third Pokemon: "),input("Pick P2's first Pokemon: "),input("Pick P2's second Pokemon: "),input("Pick P2's third Pokemon: "))
+    elif(p1AI == "nn-train"):
+        maxGames = input("How many games do you want to train on? ")
+        winCount = 0.0
+        p1 = NN()
+        for i in range(1, int(maxGames)+1):
+            battle = BattleSim(True, i, p1,0, 0,0,0, 0,0,0)
+            if(battle.isDefeated(battle.team2)):
+                winCount = winCount + 1
+            #if(i % 100 == 0):
+            print("PokeNet has won "+str(winCount)+" games out of "+str(i)+" total. This is a win rate of "+str((winCount/i)*100)+"%.")
+    else:
+        winCount = 0.0
+        i = 1
+        p1 = NN()
+        while(True):
+            battle = BattleSim(True, i, p1,0, 0,0,0, 0,0,0)
+            if(battle.isDefeated(battle.team2)):
+                winCount = winCount + 1
+            if(i % 50 == 0):
+                print("PokeNet has won "+winCount+" games out of "+i+" total. This is a win rate of "+(winCount/i)*100+"%.")
+            i += 1
 
 
 
