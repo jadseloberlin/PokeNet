@@ -2,7 +2,7 @@ class Instance(object):
     def __init__(self, inputDict, inputLabel):
         self.dict = inputDict
         self.label = inputLabel
-        self.labelList = []
+        #self.labelList = []
         self.attributeList = []
 
     def attributeListProcess(self, attributeValuesDictList, continuous, attList):
@@ -20,13 +20,11 @@ class Instance(object):
                     else:
                         #print("NOT EQUAL TO INDEX!!")
                         self.attributeList.append(0)
+    def attributeProcess(self, attribute):
+        return 1
 
-    def labelListProcess(self, labelList, binaryLabel):
-        if binaryLabel == False:
-            self.labelList = [0] * len(labelList)
-            self.labelList[labelList.index(self.label)] = 1
-        else:
-            if labelList.index(self.label) == 0:
-                self.labelList.append(0)
-            else:
-                self.labelList.append(1)
+    def actionProcess(self, action):
+        actionList = ["quick", "strong", "switch1", "switch2"]
+        rtn = [0] * 4
+        rtn[actionList.index(action)] = 1
+        return rtn

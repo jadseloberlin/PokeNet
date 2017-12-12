@@ -12,7 +12,35 @@ import numpy
 def main():
     #battle = BattleSim(input("Who controls P1? Choose 'user' or 'basic' : "),input("Who controls P2? Choose 'user' or 'basic' : "),input("Pick P1's first Pokemon: "),input("Pick P1's second Pokemon: "),input("Pick P1's third Pokemon: "),input("Pick P2's first Pokemon: "),input("Pick P2's second Pokemon: "),input("Pick P2's third Pokemon: "))
     #battle = BattleSim(input("Who controls P1? Choose 'user', 'nn' or 'basic' : "),"basic",input("Pick P1's first Pokemon: "),input("Pick P1's second Pokemon: "),input("Pick P1's third Pokemon: "),"Charizard", "Blastoise", "Venusaur")
-    battle = BattleSim(input("Who controls P1? Choose 'user', 'nn' or 'basic' : "),"basic","Zapdos","Moltres","Articuno","Charizard", "Blastoise", "Venusaur")
+    #battle = BattleSim(input("Who controls P1? Choose 'user', 'nn' or 'basic' : "),"basic","Zapdos","Moltres","Articuno","Charizard", "Blastoise", "Venusaur")
+    p1AI = input("Single battle or training nn?: 'single' or 'nn-train' or 'inf-train' : ")
+    while( (not (p1AI == "single") or (not (p1AI == 'inf-train')) or (not (p1AI == "nn-train")))):
+        if(p1AI == "single"):
+            battle = BattleSim(False, 0, input("Who controls P1? Choose 'user', 'nn' or 'basic' : "),input("Who controls P2? Choose 'user', 'nn' or 'basic' : "),input("Pick P1's first Pokemon: "),input("Pick P1's second Pokemon: "),input("Pick P1's third Pokemon: "),input("Pick P2's first Pokemon: "),input("Pick P2's second Pokemon: "),input("Pick P2's third Pokemon: "))
+        elif(p1AI == "nn-train"):
+            maxGames = input("How many games do you want to train on? ")
+            winCount = 0.0
+            p1 = NN()
+            for i in range(1, int(maxGames)+1):
+                battle = BattleSim(True, i, p1,0, 0,0,0, 0,0,0)
+                if(battle.isDefeated(battle.team2)):
+                    winCount = winCount + 1
+                #if(i % 100 == 0):
+                print("PokeNet has won "+str(winCount)+" games out of "+str(i)+" total. This is a win rate of "+str((winCount/i)*100)+"%.")
+        else:
+            winCount = 0.0
+            i = 1
+            p1 = NN()
+            while(True):
+                battle = BattleSim(True, i, p1,0, 0,0,0, 0,0,0)
+                if(battle.isDefeated(battle.team2)):
+                    winCount = winCount + 1
+                if(i % 50 == 0):
+                    print("PokeNet has won "+winCount+" games out of "+i+" total. This is a win rate of "+(winCount/i)*100+"%.")
+                i += 1
+
+
+
 
 
 class BattleSim(object):
@@ -31,7 +59,7 @@ class BattleSim(object):
         sb += "]"
         return sb
 
-    def __init__ (self, p1AI, p2AI, p1Mon1, p1Mon2,  p1Mon3,  p2Mon1, p2Mon2,  p2Mon3):
+    def __init__ (self, training, games, p1AI, p2AI, p1Mon1, p1Mon2,  p1Mon3,  p2Mon1, p2Mon2,  p2Mon3):
         self.types = ["fire", "water", "grass", "bug", "ghost","psychic","dragon","electric", "rock", "ice", "poison", "normal", "ground","fighting","flying","dark","steel","fairy","none"]
         self.validMon = {}
         self.team1 = [0,0,0]
@@ -214,59 +242,91 @@ class BattleSim(object):
         darkAttack["fighting"] = .5
         self.atkMult["dark"] = darkAttack
 
-
-		#load AI
-        if(p1AI=="user") :
-	           self.p1 = UserControl()
-        elif(p1AI=="nn"):
-            self.p1 = NN()
-        elif(p1AI == "basic"):
-            self.p1 = BasicAI()
-        else:
-            print("invalid ai for player 1")
-            sys.exit(1)
-
-        if(p2AI=="user"):
-            self.p2 = UserControl()
-        elif(p2AI == "nn"):
-            self.p2 = NN()
-        elif(p2AI == "basic"):
-            self.p2 = BasicAI()
-        else:
-            print("invalid ai for player 2")
-            sys.exit(1)
-
         fileLocation = "pokemon.csv"
         dataFile = open(fileLocation, 'r')
         line = next(dataFile)
+        self.fullMonList = []
         for line in dataFile:
             lineparts = line.strip().split(",")
             name  = lineparts[0]
+            self.fullMonList.append(name)
             self.validMon[name] = Mon(name, int(lineparts[1]), int(lineparts[2]), int(lineparts[3]),
 					int(lineparts[4]), lineparts[5], int(lineparts[6]), int(lineparts[7]),
 					lineparts[8], lineparts[9], int(lineparts[10]), int(lineparts[11]), lineparts[12],
 					lineparts[13], lineparts[14])
 
-        # load teams
-        m11 = deepcopy(self.validMon[p1Mon1])
-        m11.active = True
-        m12 = deepcopy(self.validMon[p1Mon2])
-        m13 = deepcopy(self.validMon[p1Mon3])
-        m21 = deepcopy(self.validMon[p2Mon1])
-        m21.active = True;
-        m22 = deepcopy(self.validMon[p2Mon2])
-        m23 = deepcopy(self.validMon[p2Mon3])
-        self.team1[0] = m11;
-        self.team1[1] = m12;
-        self.team1[2] = m13;
-        self.team2[0] = m21;
-        self.team2[1] = m22;
-        self.team2[2] = m23;
+        if(not training):
+    		#load AI
+            if(p1AI=="user") :
+    	           self.p1 = UserControl()
+            elif(p1AI=="nn"):
+                self.p1 = NN()
+            elif(p1AI == "basic"):
+                self.p1 = BasicAI()
+            else:
+                print("invalid ai for player 1")
+                sys.exit(1)
 
-        if(self.battle()):
-            print("P1 wins!")
+            if(p2AI=="user"):
+                self.p2 = UserControl()
+            elif(p2AI == "nn"):
+                self.p2 = NN()
+            elif(p2AI == "basic"):
+                self.p2 = BasicAI()
+            else:
+                print("invalid ai for player 2")
+                sys.exit(1)
+
+
+
+
+            # load teams
+            m11 = deepcopy(self.validMon[p1Mon1])
+            m11.active = True
+            m12 = deepcopy(self.validMon[p1Mon2])
+            m12.active=False
+            m13 = deepcopy(self.validMon[p1Mon3])
+            m13.active=False
+            m21 = deepcopy(self.validMon[p2Mon1])
+            m21.active = True;
+            m22 = deepcopy(self.validMon[p2Mon2])
+            m22.active=False
+            m23 = deepcopy(self.validMon[p2Mon3])
+            m23.active=False
+            self.team1[0] = m11;
+            self.team1[1] = m12;
+            self.team1[2] = m13;
+            self.team2[0] = m21;
+            self.team2[1] = m22;
+            self.team2[2] = m23;
+
+            if(self.battle(False,0)):
+                print("P1 wins!")
+            else:
+                print("P2 wins!")
         else:
-            print("P2 wins!")
+            listcap = len(self.fullMonList)-1
+            m11 = deepcopy(self.validMon[self.fullMonList[random.randint(0,listcap)]])
+            m11.active = True
+            m12 = deepcopy(self.validMon[self.fullMonList[random.randint(0,listcap)]])
+            m12.active=False
+            m13 = deepcopy(self.validMon[self.fullMonList[random.randint(0,listcap)]])
+            m13.active=False
+            m21 = deepcopy(self.validMon[self.fullMonList[random.randint(0,listcap)]])
+            m21.active = True;
+            m22 = deepcopy(self.validMon[self.fullMonList[random.randint(0,listcap)]])
+            m22.active=False
+            m23 = deepcopy(self.validMon[self.fullMonList[random.randint(0,listcap)]])
+            m23.active=False
+            self.team1[0] = m11;
+            self.team1[1] = m12;
+            self.team1[2] = m13;
+            self.team2[0] = m21;
+            self.team2[1] = m22;
+            self.team2[2] = m23;
+            self.p1 = p1AI
+            self.p2 = BasicAI()
+            self.battle(True,games)
 
     def isDefeated(self, team):
         # returns whether or not team has no usable Pokemon left
@@ -283,21 +343,23 @@ class BattleSim(object):
         else:
             return team[2];
 
-    def switch1(self, team):  #what if nothing to switch to
+    def switch1(self, team, training):  #what if nothing to switch to
         if (team[0].active):
             if not (team[1].defeated) :
                 team[0].active = False;
                 team[1].active = True;
-                if not (team[0].defeated):
+                if not (team[0].defeated or training):
                     print(team[0].name+"  is switching out!")
-                print("Go, "+team[1].name + "!")
+                if not training:
+                    print("Go, "+team[1].name + "!")
                 return
             elif not (team[2].defeated) :
                 team[0].active = False;
                 team[2].active = True;
-                if not (team[0].defeated) :
+                if not (team[0].defeated or  training) :
                     print(team[0].name+"  is switching out!")
-                print("Go, "+team[2].name+"!")
+                if not training:
+                    print("Go, "+team[2].name+"!")
                 return
             else :
                 return
@@ -305,16 +367,18 @@ class BattleSim(object):
             if not (team[2].defeated) :
                 team[1].active = False
                 team[2].active = True
-                if not (team[1].defeated) :
+                if not (team[1].defeated or training) :
                     print(team[1].name + " is switching out!")
-                print("Go, "+team[2].name+"!");
+                if not training:
+                    print("Go, "+team[2].name+"!");
                 return
             elif not (team[0].defeated):
                 team[1].active = False
                 team[0].active = True
-                if not (team[1].defeated) :
+                if not (team[1].defeated or training) :
                     print(team[1].name + " is switching out!")
-                print("Go, "+team[0].name+"!")
+                if not training:
+                    print("Go, "+team[0].name+"!")
                 return
             else :
                 return
@@ -322,37 +386,41 @@ class BattleSim(object):
             if not (team[0].defeated):
                 team[2].active = False
                 team[0].active = True
-                if not (team[2].defeated):
+                if not (team[2].defeated or training):
                     print(team[2].name+"  is switching out!")
-                print("Go, "+team[0].name+"!")
+                if not training:
+                    print("Go, "+team[0].name+"!")
                 return
             elif not (team[1].defeated):
                 team[2].active = False
                 team[1].active = True
-                if not(team[2].defeated):
+                if not(team[2].defeated or training):
                     print(team[2].name+"  is switching out!")
-                print("Go, "+team[1].name+"!")
+                if not training:
+                    print("Go, "+team[1].name+"!")
                 return
             else :
                 return
         else :
             return
 
-    def switch2(self, team):  #what if nothing to switch to
+    def switch2(self, team, training):  #what if nothing to switch to
         if (team[0].active):
             if not (team[2].defeated) :
                 team[0].active = False
                 team[2].active = True
-                if not (team[0].defeated):
+                if not (team[0].defeated or training):
                    print(team[0].name+"  is switching out!")
-                print("Go, "+team[2].name + "!")
+                if not training:
+                    print("Go, "+team[2].name + "!")
                 return
             elif not (team[1].defeated) :
                 team[0].active = False
                 team[1].active = True
-                if not (team[0].defeated) :
+                if not (team[0].defeated or training) :
                     print(team[0].name+"  is switching out!")
-                print("Go, "+team[1].name+"!")
+                if not training:
+                    print("Go, "+team[1].name+"!")
                 return
             else :
                 return
@@ -360,16 +428,18 @@ class BattleSim(object):
             if not (team[0].defeated) :
                 team[1].active = False
                 team[0].active = True
-                if not (team[1].defeated) :
+                if not (team[1].defeated or training) :
                     print(team[1].name + " is switching out!")
-                print("Go, "+team[0].name+"!");
+                if not training:
+                    print("Go, "+team[0].name+"!");
                 return
             elif not (team[2].defeated):
                 team[1].active = False
                 team[2].active = True
-                if not (team[1].defeated) :
+                if not (team[1].defeated or training) :
                     print(team[1].name + " is switching out!")
-                print("Go, "+team[2].name+"!")
+                if not training:
+                    print("Go, "+team[2].name+"!")
                 return
             else :
                 return
@@ -377,16 +447,18 @@ class BattleSim(object):
             if not (team[1].defeated):
                 team[2].active = False
                 team[1].active = True
-                if not (team[2].defeated):
+                if not (team[2].defeated or training):
                     print(team[2].name+"  is switching out!")
-                print("Go, "+team[1].name+"!")
+                if not training:
+                    print("Go, "+team[1].name+"!")
                 return
             elif not (team[0].defeated):
                 team[2].active = False
                 team[0].active = True
-                if not(team[2].defeated):
+                if not(team[2].defeated or training):
                     print(team[2].name+"  is switching out!")
-                print("Go, "+team[0].name+"!")
+                if  not training:
+                    print("Go, "+team[0].name+"!")
                 return
             else :
                 return
@@ -395,19 +467,22 @@ class BattleSim(object):
 
 
 	#returns true if p1 wins, false if p2 wins
-    def battle(self):
+    def battle(self, training, games):
         turns = 0
         while not (self.isDefeated(self.team1)) and not (self.isDefeated(self.team2)):
-            print()
+            if not training:
+                print()
             turns += 1
-            print("This is turn number "+str(turns))
+            if not training:
+                print("This is turn number "+str(turns))
             active1 = self.active(self.team1)
             active2 = self.active(self.team2)
-            print("P1's "+active1.name+" has "+str(int(active1.hp))+" HP left. ")
-            print("P2's "+active2.name+" has "+str(int(active2.hp))+" HP left. ")
-            print("")
-            move1 = self.p1.chooseMove(self.team1, active2, self.atkMult, turns)
-            move2 = self.p2.chooseMove(self.team2, active1, self.atkMult, turns)
+            if not training:
+                print("P1's "+active1.name+" has "+str(int(active1.hp))+" HP left. ")
+                print("P2's "+active2.name+" has "+str(int(active2.hp))+" HP left. ")
+                print("")
+            move1 = self.p1.chooseMove(self.team1, active2, self.atkMult, turns, self.fullMonList, games)
+            move2 = self.p2.chooseMove(self.team2, active1, self.atkMult, turns, self.fullMonList, games)
 
             if(self.onlyOneLeft(self.team1) and (move1 == "switch1" or move1 == "switch2")):
                 move1 = "quick"
@@ -422,155 +497,160 @@ class BattleSim(object):
 					#if player 2 is also switching to first
                     if (active1.speed >= active2.speed):
 						#if p1 is faster
-                        self.switch1(self.team1)
-                        self.switch1(self.team2)
+                        self.switch1(self.team1, training)
+                        self.switch1(self.team2, training)
                     else:
 						#if p2 is faster
-                        self.switch1(self.team2)
-                        self.switch1(self.team1)
+                        self.switch1(self.team2, training)
+                        self.switch1(self.team1, training)
                 elif(move2 == "switch2"):
 					#if p2 is switching to second available
                     if (active1.speed >= active2.speed):
 						#if p1 is faster
-                        self.switch1(self.team1)
-                        self.switch2(self.team2)
+                        self.switch1(self.team1, training)
+                        self.switch2(self.team2, training)
                     else:
 						#if p2 is faster
-                        self.switch2(self.team2)
-                        self.switch1(self.team1)
+                        self.switch2(self.team2, training)
+                        self.switch1(self.team1, training)
                 elif(move2=="quick"):
 					#p2 is attacking quickly
-                    self.switch1(self.team1)
-                    self.quick(active2, self.active(self.team1), self.team1)
+                    self.switch1(self.team1, training)
+                    self.quick(active2, self.active(self.team1), self.team1, training)
                 else:
 					#p2 is attacking strongly
-                    self.switch1(self.team1)
-                    self.strong(active2, self.active(self.team1), self.team1)
+                    self.switch1(self.team1, training)
+                    self.strong(active2, self.active(self.team1), self.team1, training)
             elif (move1 == "switch2"):
 				#p1 switches to second available
                 if (move2 == "switch2"):
 					#if player 2 is also switching to second
                     if (active1.speed >= active2.speed):
 						#if p1 is faster
-                        self.switch2(self.team1)
-                        self.switch2(self.team2)
+                        self.switch2(self.team1, training)
+                        self.switch2(self.team2, training)
                     else :
 						#if p2 is faster
-                        self.switch2(self.team2)
-                        self.switch2(self.team1)
+                        self.switch2(self.team2, training)
+                        self.switch2(self.team1, training)
                 elif (move2 == "switch1"):
 					#if p2 is switching to first available
                     if (active1.speed >= active2.speed):
 						#if p1 is faster
-                        self.switch2(self.team1)
-                        self.switch1(self.team2)
+                        self.switch2(self.team1, training)
+                        self.switch1(self.team2, training)
                     else:
 						#if p2 is faster
-                        self.switch1(self.team2)
-                        self.switch2(self.team1)
+                        self.switch1(self.team2, training)
+                        self.switch2(self.team1, training)
                 elif (move2 == "quick"):
 					#p2 is attacking quickly
-                    self.switch2(self.team1)
-                    self.quick(active2, self.active(self.team1), self.team1)
+                    self.switch2(self.team1, training)
+                    self.quick(active2, self.active(self.team1), self.team1, training)
                 else :
 					#p2 is attacking strongly
-                    self.switch2(self.team1)
-                    self.strong(active2, self.active(self.team1), self.team1)
+                    self.switch2(self.team1, training)
+                    self.strong(active2, self.active(self.team1), self.team1, training)
             elif(move1 == "quick"):
 				#p1 chooses quick
                 if (move2 == "switch1"):
 					#p2 switches to first available
-                    self.switch1(self.team2)
-                    self.quick(active1, self.active(self.team2), self.team2)
+                    self.switch1(self.team2, training)
+                    self.quick(active1, self.active(self.team2), self.team2, training)
                 elif(move2 == "switch2"):
 					#p2 switches to second available
-                    self.switch2(self.team2)
-                    self.quick(active1, self.active(self.team2), self.team2)
+                    self.switch2(self.team2, training)
+                    self.quick(active1, self.active(self.team2), self.team2, training)
                 else:
 					#p2 attacks
                     if (active1.speed >= active2.speed):
 						#p1 is faster
-                        self.quick(active1, active2,self.team2)
+                        self.quick(active1, active2,self.team2, training)
                         if ( ( self.isDefeated(self.team2) ) or (active2.defeated) ):
                             continue
                         if (move2 == "quick"):
 							#p2 uses a quick attack
-                            self.quick(self.active(self.team2), active1, self.team1)
+                            self.quick(self.active(self.team2), active1, self.team1, training)
                         else:
 							#p2 uses a strong attack
-                            self.strong(self.active(self.team2), active1, self.team1)
+                            self.strong(self.active(self.team2), active1, self.team1, training)
                     else:
 						#p2 is faster
                         if(move2 == "quick"):
 							#p2 uses a quick attack
-                            self.quick(active2, active1, self.team1)
+                            self.quick(active2, active1, self.team1, training)
                         else:
 							#p2 uses a strong attack
-                            self.strong(active2, active1, self.team1)
+                            self.strong(active2, active1, self.team1, training)
                         if (self.isDefeated(self.team1)):
                             continue
                         if(active1.defeated):
                             continue
-                        self.quick(active1, active2, self.team2)
+                        self.quick(active1, active2, self.team2, training)
             else:
 				#p1 chooses strong
                 if (move2 == "switch1"):
 					#p2 switches to first available
-                    self.switch1(self.team2)
-                    self.strong(active1, self.active(self.team2), self.team2)
+                    self.switch1(self.team2, training)
+                    self.strong(active1, self.active(self.team2), self.team2, training)
                 elif (move2 == "switch2"):
 					#p2 switches to second available
-                    self.switch2(self.team2)
-                    self.strong(active1, self.active(self.team2), self.team2)
+                    self.switch2(self.team2, training)
+                    self.strong(active1, self.active(self.team2), self.team2, training)
                 else :
 					#p2 attacks
                     if (active1.speed >= active2.speed):
 						#p1 is faster
-                        self.strong(active1, active2, self.team2)
+                        self.strong(active1, active2, self.team2, training)
                         if ((self.isDefeated(self.team2)) or (active2.defeated) ):
                             continue
                         if(move2 == "quick"):
 							#p2 uses a quick attack
-                            self.quick(self.active(self.team2), active1, self.team1)
+                            self.quick(self.active(self.team2), active1, self.team1, training)
                         else:
 							#p2 uses a strong attack
-                            self.strong(self.active(self.team2), active1, self.team1)
+                            self.strong(self.active(self.team2), active1, self.team1, training)
                     else:
 						#p2 is faster
                         if (move2 == "quick"):
 							#p2 uses a quick attack
-                            self.quick(active2, active1, self.team1)
+                            self.quick(active2, active1, self.team1, training)
                         else:
 							#p2 uses a strong attack
-                            self.strong(active2, active1, self.team1)
+                            self.strong(active2, active1, self.team1, training)
                         if(self.isDefeated(self.team1)):
                             continue
                         if(active1.active):
 							#if active1 wasn't knocked out
-                            self.strong(active1, active2, self.team2)
-        print("")
-        self.p1.cleanUp()
-        self.p2.cleanUp()
+                            self.strong(active1, active2, self.team2, training)
+        if not training:
+            print("")
+        if(games % 100 == 0):
+            self.p1.cleanUp(games)
+            self.p2.cleanUp(games)
         return self.isDefeated(self.team2)
 
-    def quick(self, attacker, target, targetTeam): #returns true if target faints
+    def quick(self, attacker, target, targetTeam, training): #returns true if target faints
 
-        print(attacker.name+" used "+attacker.quickMoveName+ " on "+target.name+"!")
+        if not training:
+            print(attacker.name+" used "+attacker.quickMoveName+ " on "+target.name+"!")
         accCheck = random.randint(0,100) #accuracy needs to be higher than accCheck to land
         if (attacker.quickMoveAcc <= accCheck):
-            print("But it missed!")
+            if not training:
+                print("But it missed!")
             return False
         damage = attacker.quickMovePower + 2/3 * (attacker.attack - target.defense)
         multiplier = 1
         multiplier = multiplier * self.atkMult.get(attacker.quickMoveType).get(target.type1)
         multiplier = multiplier * self.atkMult.get(attacker.quickMoveType).get(target.type2)
 
-        if(multiplier > 1):
+        if(multiplier > 1 and not training):
             print("It's super effective!")
         elif ( multiplier == 0 ):
-            print("It didn't have any effect...")
+            if not training:
+                print("It didn't have any effect...")
             return False
-        elif(multiplier < 1 ):
+        elif(multiplier < 1 and not training):
             print("It's  not very effective...")
         damage = damage * multiplier
         if(damage < 5):
@@ -578,18 +658,21 @@ class BattleSim(object):
         target.hp = target.hp - damage
         if(target.hp < 1):
             target.defeated = True
-            print(target.name + " fainted!")
+            if not training:
+                print(target.name + " fainted!")
             if(not self.isDefeated(targetTeam)):
-                self.switch1(targetTeam)
+                self.switch1(targetTeam, training)
             return True
         return False
 
-    def strong(self, attacker, target, targetTeam): #returns true if target faints
+    def strong(self, attacker, target, targetTeam, training): #returns true if target faints
 
-        print(attacker.name+" used "+attacker.strongMoveName+ " on "+target.name+"!")
+        if not training:
+            print(attacker.name+" used "+attacker.strongMoveName+ " on "+target.name+"!")
         accCheck = random.randint(0,100) #accuracy needs to be higher than accCheck to land
         if (attacker.strongMoveAcc <= accCheck):
-            print("But it missed!")
+            if not training:
+                print("But it missed!")
             return False
         damage = attacker.strongMovePower + 2/3* (attacker.attack - target.defense)
         if(damage < 5):
@@ -597,20 +680,22 @@ class BattleSim(object):
         multiplier = 1
         multiplier = multiplier * self.atkMult.get(attacker.strongMoveType).get(target.type1)
         multiplier = multiplier * self.atkMult.get(attacker.strongMoveType).get(target.type2)
-        if(multiplier > 1):
+        if(multiplier > 1 and not training):
             print("It's super effective!")
-        elif ( multiplier == 0 ):
-            print("It didn't have any effect...")
+        elif ( multiplier == 0  ):
+            if not training:
+                print("It didn't have any effect...")
             return False
-        elif(multiplier < 1 ):
+        elif(multiplier < 1 and not training):
             print("It's  not very effective...")
         damage = damage * multiplier
         target.hp = target.hp - damage
         if(target.hp < 1):
             target.defeated = True
-            print(target.name + " fainted!")
+            if not training:
+                print(target.name + " fainted!")
             if(not self.isDefeated(targetTeam)):
-                self.switch1(targetTeam)
+                self.switch1(targetTeam, training)
             return True
         return False
 

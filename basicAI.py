@@ -6,7 +6,7 @@ import sys
 class BasicAI(object):
     def __init__(self):
         self.nothing = 0
-    def chooseMove(self, team, activeOpp, typeMatchups, turns):
+    def chooseMove(self, team, activeOpp, typeMatchups, turns, monList, games):
         randNum = random.randint(0,100) # randomly choose an action
         if(randNum%27==0):
             return "switch1"
@@ -15,5 +15,5 @@ class BasicAI(object):
         if(randNum%2==1):
             return "strong"
         return "quick"
-    def cleanUp(self):
+    def cleanUp(self, games):
         return True
