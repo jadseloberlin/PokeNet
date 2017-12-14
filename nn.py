@@ -6,101 +6,12 @@ import tensorflow as tf
 from state import State
 import numpy
 
-# def main():
-#     # fileLocation = sys.argv[1]
-#     # numNeurons = int(sys.argv[2])
-#     # learningRate = float(sys.argv[3])
-#     # iterNum = int(sys.argv[4])
-#     # trainingSetPercent = float(sys.argv[5])
-#     numNeurons = 50
-#     learningRate = .07
-#     iterNum = 750;
-#     # trainingSetPercent = float(sys.argv[5])
-#     seed = 1334
-#     completeList = []
-#
-#
-#     attributeList = []
-#     continuous = {}
-#     attributeValuesDict = {}
-#     attributeValuesDictList = {}
-#     labelList = [] #hardcode!
-#     labelSet = set()  #hardcode!
-#
-#     #open file and process data
-#     path = '*.csv' #note C:
-#     files = glob.glob(path)
-#     # dataFile = open(fileLocation, 'r')
-#     line = next(dataFile)
-#     attributeList = line.split(",")
-#     for i in range(1,len(attributeList)):
-#         attribute = attributeList[i]
-#         continuous[attribute] = False
-#         attributeValuesDict[attribute] = set()
-#     for line in dataFile:
-#         dic = {}
-#         arr = line.split(",")
-#         if arr[0] not in labelSet:
-#             labelSet.add(arr[0])
-#         for i in range(1,len(attributeList)):
-#             att = attributeList[i]
-#             dic[att] = arr[i]
-#             try:
-#                 f = float(arr[i])
-#                 continuous[att] = True
-#             except:
-#                 #find all posssible types of certain attribute
-#                 atSet = attributeValuesDict[att]
-#                 if arr[i] not in atSet:
-#                     atSet.add(arr[i])
-#                     attributeValuesDict[att] = atSet
-#         newInst = Instance(dic, arr[0])
-#         completeList.append(newInst)
-#
-#     del attributeList[0]
-#
-#
-#
-#     tempList = attributeValuesDict.items()
-#     for tup in tempList:
-#         attribute = tup[0]
-#         s = tup[1]
-#         tempList2 = []
-#         for value in s:
-#             tempList2.append(value)
-#         attributeValuesDictList[attribute] = tempList2
-#
-#     for instance in completeList:
-#         processInstance(instance, attributeValuesDictList, labelList, continuous, attributeList)
-#
-#     #shuffle list
-#     random.seed(seed)
-#     shuffledCompleteList = list(completeList)
-#     random.shuffle(shuffledCompleteList)
-#
-#
-#     labelNum = len(labelList)
-#
-#     listAtt = []
-#     listLab = []
-#     for instance in completeList:
-#         listAtt.append(instance.attributeList)
-#         listLab.append(instance.labelList)
-#
-#     tupleComplete = (listAtt, listLab)
-#
-#     instance = completeList[0]
-#     numAtt = len(instance.attributeList)
-#
-#     buildTensorFlow(numAtt, labelNum, 50, .07, iterNum, labelList, 1334)
-#     trainTensorFlow(tupleComplete, 10)
 class NN(object):
 
     def __init__(self):
         self.numNeurons = 50
         self.learningRate = .001
         self.seed = 1334
-        self.iterNum = 750
         self.numAttributes = 460
         self.numLabels = 4
         self.labelList = ["quick", "strong", "switch1", "switch2"]
@@ -111,8 +22,6 @@ class NN(object):
 
 
         self.sess = None
-
-
         self.state = None
         self.y = None
         self.predict = None
@@ -128,11 +37,6 @@ class NN(object):
 
 
     def buildTensorFlow(self):
-
-        # r = tf.placeholder(tf.float32, shape = [bumActions])
-        # predict = tf.placeholder(tf.float32, shape = [numLabels])
-
-
 
         self.state = tf.placeholder(tf.float32, shape = [None, self.numAttributes])
         self.nextQ = tf.placeholder(tf.float32, shape = [self.numLabels]) #self.numAttributes
@@ -156,16 +60,12 @@ class NN(object):
         self.y = tf.placeholder(tf.float32, shape = [None, self.numLabels])
 
         cost = (self.r * self.mask + tf.reduce_max(self.nextQ) * self.mask - self.mask*self.predict)**2
-
         self.trainer = tf.train.AdamOptimizer(self.learningRate).minimize(cost)
 
         #start a TF session
         self.sess = tf.Session()
         init = tf.initialize_all_variables().run(session =self.sess)
         self.saver = tf.train.Saver(tf.all_variables())
-        #self.saver = tf.train.Saver()
-        #self.saver.save(self.sess, './pokemon_model', global_step=0)
-
         print("Built!")
 
 
@@ -178,36 +78,15 @@ class NN(object):
             load_path = ckpt.model_checkpoint_path
 
             self.saver.restore(self.sess, load_path)
-
             self.steps = int(load_path.split("-")[-1])
-
-
-            # graph = tf.get_default_graph()
-
-            # self.state = graph.get_tensor_by_name("state:0")
-            # self.y = graph.get_tensor_by_name("y:0")
-            # self.predict = graph.get_tensor_by_name("predict:0")
-            # self.nextQ = graph.get_tensor_by_name("nextQ:0")
-            # self.action = graph.get_tensor_by_name("action:0")
-            # self.trainer = graph.get_tensor_by_name("trainer:0")
-            # self.r = graph.get_tensor_by_name("r:0")
-            # self.mask = graph.get_tensor_by_name("mask:0")
-
-            # self.sess = tf.Session()
-            # init = tf.initialize_all_variables().run(session =self.sess)
-
             print("Loaded!")
 
         except:
-            #print(e)
             pass
-            #self.buildTensorFlow()
 
     def trainTensorFlow(self, st, at, rt, st1):
         et = (st, at, rt, st1)
         self.D.append(et)
-        steps = 0
-        maxSteps = self.iterNum
         random.shuffle(self.D)
         T = []
 
@@ -238,18 +117,6 @@ class NN(object):
             a = random.randint(0,3) #choose a random action
         action= self.labelList[a]
         return action
-
-
-    # def processInstance(self,instance, attributeValuesDictList, labelList, continuous, attList):
-    #     instance.labelListProcess(self.labelList)
-    #     instance.attributeListProcess(attributeValuesDictList, continuous, attList)
-
-    #
-    # def actionProcess(self, action):
-    #     actionList = ["quick", "strong", "switch1", "switch2"]
-    #     rtn = [0] * 4
-    #     rtn[actionList.index(action)] = 1
-    #     return rtn
 
     # code for interacting w simulator
 
@@ -498,8 +365,3 @@ class NN(object):
         saver.save(self.sess, "./pokemon_model", global_step=self.steps)
 
         return True
-
-
-
-    # if __name__ == '__main__':
-    #     main()
