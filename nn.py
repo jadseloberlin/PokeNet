@@ -10,7 +10,7 @@ class NN(object):
 
     def __init__(self):
         self.numNeurons = 50
-        self.learningRate = .001
+        self.learningRate = .0007
         self.seed = 1334
         self.numAttributes = 460
         self.numLabels = 4
