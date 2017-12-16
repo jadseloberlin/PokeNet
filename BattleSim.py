@@ -1,5 +1,6 @@
 from copy import deepcopy
 import os
+import csv
 import math
 from nn import NN
 from userControl import UserControl
@@ -10,9 +11,9 @@ import sys
 import numpy
 
 def main():
-    #battle = BattleSim(input("Who controls P1? Choose 'user' or 'basic' : "),input("Who controls P2? Choose 'user' or 'basic' : "),input("Pick P1's first Pokemon: "),input("Pick P1's second Pokemon: "),input("Pick P1's third Pokemon: "),input("Pick P2's first Pokemon: "),input("Pick P2's second Pokemon: "),input("Pick P2's third Pokemon: "))
-    #battle = BattleSim(input("Who controls P1? Choose 'user', 'nn' or 'basic' : "),"basic",input("Pick P1's first Pokemon: "),input("Pick P1's second Pokemon: "),input("Pick P1's third Pokemon: "),"Charizard", "Blastoise", "Venusaur")
-    #battle = BattleSim(input("Who controls P1? Choose 'user', 'nn' or 'basic' : "),"basic","Zapdos","Moltres","Articuno","Charizard", "Blastoise", "Venusaur")
+    winRates = []
+    rewards = []
+    fifteen_game_win_rate=[]
     p1AI = input("Single battle or training nn?: 'single' or 'nn-train' or 'inf-train' : ")
     while( (not (p1AI == "single") and (not (p1AI == 'inf-train')) and (not (p1AI == "nn-train")))):
         p1AI = input("Please choose a valid option: 'single' or 'nn-train' or 'inf-train' : ")
@@ -22,12 +23,42 @@ def main():
         maxGames = input("How many games do you want to train on? ")
         winCount = 0.0
         p1 = NN()
+        fifteenGameWinCount = 0
         for i in range(1, int(maxGames)+1):
             battle = BattleSim(True, i, p1,0, 0,0,0, 0,0,0)
             if(battle.isDefeated(battle.team2)):
                 winCount = winCount + 1
-            #if(i % 100 == 0):
+                fifteenGameWinCount = fifteenGameWinCount + 1
+            if(i % 15 == 0):
+                fifteen_game_win_rate.append(str((fifteenGameWinCount/15)*100))
+                fifteenGameWinCount = 0
             print("PokeNet has won "+str(winCount)+" games out of "+str(i)+" total. This is a win rate of "+str((winCount/i)*100)+"%.")
+            # winRates.append(str((winCount/i)*100))
+            # rewards.append((str(p1.prevReward)))
+
+        #print data to a csv file, one for rewards for every turn in a game and one for win rate over several games
+        # s = ""
+        # for reward in rewards:
+        # 	s += reward+",\n"
+        # outputFileName = "pokemon_rewards_300games_.0001.csv"
+        # with open(outputFileName, 'w') as f:
+        #     for line in s:
+        #         f.write(line)
+        # r = ""
+        # for win in winRates:
+        # 	r += win+",\n"
+        # outputFileName = "pokemon_win_300games_.0001.csv"
+        # with open(outputFileName, 'w') as f:
+        #     for line in r:
+        #         f.write(line)
+        # t = ""
+        # for winFift in fifteen_game_win_rate:
+        #     t += winFift+",\n"
+        # outputFileName = "pokemon_15win_300games_.0001.csv"
+        # with open(outputFileName, 'w') as f:
+        #     for line in t:
+        #         f.write(line)
+
     else:
         winCount = 0.0
         i = 1

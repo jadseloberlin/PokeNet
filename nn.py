@@ -10,7 +10,7 @@ class NN(object):
 
     def __init__(self):
         self.numNeurons = 50
-        self.learningRate = .0007
+        self.learningRate = .0001
         self.seed = 1334
         self.numAttributes = 460
         self.numLabels = 4
@@ -113,8 +113,9 @@ class NN(object):
         p = self.sess.run(self.predict, feed_dict = {self.state: curStateList})
         a = numpy.argmax(p)
         randomCheck = random.randint(0,10000)
-        if(randomCheck < 10000/games):
-            a = random.randint(0,3) #choose a random action
+        if games > 0:
+            if(randomCheck < 10000/games):
+                a = random.randint(0,3) #choose a random action
         action= self.labelList[a]
         return action
 
@@ -353,6 +354,7 @@ class NN(object):
         self.prevState = newState
         self.prevReward = reward
         self.prevAction = action
+
         # return action
         return action
 
